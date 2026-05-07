@@ -8,6 +8,7 @@ using System.Diagnostics.Eventing.Reader;
 using MonoGameGum;
 using Gum.Forms.Controls;
 using System.Runtime.InteropServices;
+using Gum.Wireframe;
 
 namespace Cerda_Trivia
 {
@@ -131,6 +132,9 @@ namespace Cerda_Trivia
 
             var mainPanel = new StackPanel();
             mainPanel.AddToRoot();
+            mainPanel.Orientation = Orientation.Horizontal;
+            mainPanel.Spacing = 4;
+            mainPanel.Anchor(Anchor.Center);
 
             //Option buttons
             var Option1 = new Button();
