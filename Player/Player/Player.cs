@@ -17,9 +17,27 @@
         public int TakeTurns()
         {
             Turns++;
-            Arrows--;
-            // Return
+            return Turns;
 
+        }
+        public int ShootArrow()
+        {
+            Arrows--;
+            return Arrows;
+        }
+        public int GainArrow()
+        {
+            if (AskTriviaQuestion()) // Pretend method for Trivia
+            {
+                Arrows++;
+                GoldCoins--;
+                return Arrows;
+            }
+            else
+            {
+                // else lose Triva then won't gain arrrow
+                return Arrows;
+            }
         }
         public bool EncounterWumpus()
         {
