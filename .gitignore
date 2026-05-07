@@ -1,0 +1,6 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/2001778_Song_GameLocations/GameLocations/bin/Debug
+/2001778_Song_GameLocations/GameLocations/obj/Debug
