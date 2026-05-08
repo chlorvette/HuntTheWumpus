@@ -34,14 +34,17 @@ namespace _2006827_Tian_GameControlUI
 
         private Viewport viewport;
         private Vector2 characterPos;
-        private const int frames = 8;
+        private const int frames = 10;
+        private const int columns = 10;
+        private const int rows = 5;
         private const int framesPerSec = 10;
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            spriteTexture.Load(Content, "ArcherSheet", frames, framesPerSec);
+            spriteTexture.Load(Content, "ArcherSheet", frames, columns, rows, framesPerSec);
+            spriteTexture.Row = 1; // play second row
             viewport = _graphics.GraphicsDevice.Viewport;
             characterPos = new Vector2(viewport.Width / 2, viewport.Height / 2);
 
