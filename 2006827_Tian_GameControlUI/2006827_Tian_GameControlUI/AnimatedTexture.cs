@@ -14,6 +14,9 @@ namespace GameControlUI
     public class AnimatedTexture
     {
         private int frameCount;
+        private int columns;
+        private int rows;
+        public int Row { get; set; } = 0;
         private Texture2D texture;
         private float timePerFrame;
         private int frame;
@@ -31,9 +34,11 @@ namespace GameControlUI
             this.Depth = depth;
         }
 
-        public void Load(ContentManager content, string asset, int frameCount, int framesPerSec)
+        public void Load(ContentManager content, string asset, int frameCount, int columns, int rows, int framesPerSec)
         {
             this.frameCount = frameCount;
+            this.columns = columns;
+            this.rows = rows;
             texture = content.Load<Texture2D>(asset);
             timePerFrame = (float)1 / framesPerSec;
             frame = 0;
