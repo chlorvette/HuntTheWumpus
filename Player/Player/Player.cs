@@ -36,13 +36,13 @@
             else
             {
                 // else lose Triva then won't gain arrrow
+                Arrows--;
                 return Arrows;
             }
         }
         public bool EncounterWumpus()
         {
-            // Answer Trivia
-            // Lose coin
+            Arrows--;
             return false;
         }
         public int Score()
