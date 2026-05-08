@@ -1,6 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GameControlUI;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Drawing.Text;
+using System.Security.Cryptography.X509Certificates;
 
 namespace _2006827_Tian_GameControlUI
 {
@@ -9,11 +12,17 @@ namespace _2006827_Tian_GameControlUI
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        private AnimatedTexture spriteTexture;
+        private const float rotation = 0;
+        private const float scale = 0.5f;
+        private const float depth = 0.5f;
+
         public Main()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
+            spriteTexture = new AnimatedTexture(Vector2.Zero, rotation, scale, depth);
         }
 
         protected override void Initialize()
@@ -23,9 +32,18 @@ namespace _2006827_Tian_GameControlUI
             base.Initialize();
         }
 
+        private Viewport viewport;
+        private Vector2 characterPos;
+        private const int frames = 8;
+        private const int framesPerSec = 10;
+
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            spriteTexture.Load(Content, "SpriteAssetName", frames, framesPerSec);
+            viewport = _graphics.GraphicsDevice.Viewport;
+            characterPos = new Vector2(viewport.Width / 2, viewport.Height / 2);
 
             // TODO: use this.Content to load your game content here
         }
@@ -36,6 +54,8 @@ namespace _2006827_Tian_GameControlUI
                 Exit();
 
             // TODO: Add your update logic here
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            spriteTexture.UpdateFrame(elapsed);
 
             base.Update(gameTime);
         }
@@ -45,6 +65,9 @@ namespace _2006827_Tian_GameControlUI
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            spriteTexture.DrawFrame(_spriteBatch, characterPos);
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
