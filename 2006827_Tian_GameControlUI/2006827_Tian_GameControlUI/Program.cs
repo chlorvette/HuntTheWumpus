@@ -1,2 +1,2 @@
-﻿using var game = new _2006827_Tian_GameControlUI.Game1();
+﻿using var game = new _2006827_Tian_GameControlUI.Main();
 game.Run();
