@@ -41,7 +41,7 @@ namespace _2006827_Tian_GameControlUI
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            spriteTexture.Load(Content, "SpriteAssetName", frames, framesPerSec);
+            spriteTexture.Load(Content, "ArcherSheet", frames, framesPerSec);
             viewport = _graphics.GraphicsDevice.Viewport;
             characterPos = new Vector2(viewport.Width / 2, viewport.Height / 2);
 
