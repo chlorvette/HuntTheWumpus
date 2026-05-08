@@ -13,6 +13,7 @@ namespace GameControlUI
 {
     public class AnimatedTexture
     {
+        public int FrameCount { get { return frameCount; } set { frameCount = value; } }
         private int frameCount;
         private int columns;
         private int rows;
@@ -68,8 +69,9 @@ namespace GameControlUI
 
         public void DrawFrame(SpriteBatch batch, int frame, Microsoft.Xna.Framework.Vector2 screenPos)
         {
-            int FrameWidth = texture.Width / frameCount;
-            Microsoft.Xna.Framework.Rectangle sourceRect = new Microsoft.Xna.Framework.Rectangle(FrameWidth * frame, 0, FrameWidth, texture.Height);
+            int FrameWidth = texture.Width / columns;
+            int FrameHeight = texture.Height / rows;
+            Microsoft.Xna.Framework.Rectangle sourceRect = new Microsoft.Xna.Framework.Rectangle(FrameWidth * frame, FrameHeight * Row, FrameWidth, FrameHeight);
             batch.Draw(texture, screenPos, sourceRect, Microsoft.Xna.Framework.Color.White, Rotation, Origin, Scale, SpriteEffects.None, Depth);
         }
 
