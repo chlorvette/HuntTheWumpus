@@ -22,24 +22,33 @@
         }
         public int ShootArrow()
         {
-            Arrows--;
+            if (Arrows > 0)
+            {
+                Arrows--;
+                return Arrows;
+            }
             return Arrows;
+               
         }
-        public int GainArrow()
+
+        public (int, int) GainArrow(bool PassTrivia)
         {
-            if (AskTriviaQuestion()) // Pretend method for Trivia
+            if (PassTrivia) // Pretend method for Trivia
             {
                 Arrows++;
                 GoldCoins--;
-                return Arrows;
+                return (Arrows, GoldCoins);
+  
             }
             else
             {
                 // else lose Triva then won't gain arrrow
                 Arrows--;
-                return Arrows;
+                return (Arrows, GoldCoins);
             }
         }
+
+
         public bool EncounterWumpus()
         {
             Arrows--;
@@ -49,6 +58,13 @@
         {
             EndingScore = (GoldCoins * 10) - (Turns * 1);
             return EndingScore;
+        }
+        public void DisplayRepository()
+        {
+            Console.WriteLine($"Arrows: {Arrows}");
+            Console.WriteLine($"Gold Coins: {GoldCoins}");
+            Console.WriteLine($"Turns: {Turns}");
+            Console.WriteLine($"Ending Score: {EndingScore}");
         }
        
            
