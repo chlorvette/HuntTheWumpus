@@ -100,6 +100,7 @@ namespace _2001778_Song_GameLocations
 
         private void buttonWarning_Click(object sender, EventArgs e)
         {
+            //this is suppsoed to be the adjacent locations not the connectedLocations but for testing purposes we will just use the connected locations
             richTextBoxWarnings.Text = gameLocations.GetHazardWarning(connectedLocations);
         }
 
@@ -135,8 +136,9 @@ namespace _2001778_Song_GameLocations
                 GenerateRandomConnectedRooms();
                 numberOfRooms--;
             }
-               
-            
+            gameLocations.ResetWumpusAsleepTimer();
+
+
         }
 
         private void buttonOneTurn_Click(object sender, EventArgs e)
@@ -148,6 +150,11 @@ namespace _2001778_Song_GameLocations
             }
             gameLocations.OneTurnPasses();
             
+        }
+
+        private void buttonBuySecret_Click(object sender, EventArgs e)
+        {
+            richTextBoxSecret.Text = gameLocations.BuySecret();
         }
     }
 }

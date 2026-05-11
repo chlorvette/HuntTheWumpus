@@ -235,6 +235,7 @@ namespace GameLocations
         {
             //call this after the player wins a trivia question against the wumpus to reset the timer for how long the wumpus isn't asleep for
             TurnsUntilWumpusIsAsleep = 3;
+            WumpusIsAwake = true;
         }
         public void OneTurnPasses()
         {

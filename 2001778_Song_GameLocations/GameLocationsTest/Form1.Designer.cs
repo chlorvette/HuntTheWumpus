@@ -54,6 +54,7 @@
             this.buttonOneTurn = new System.Windows.Forms.Button();
             this.labelWumpusCondition = new System.Windows.Forms.Label();
             this.textBoxWumpusCondition = new System.Windows.Forms.TextBox();
+            this.richTextBoxSecret = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // buttonSetLocations
@@ -165,12 +166,13 @@
             // 
             // buttonBuySecret
             // 
-            this.buttonBuySecret.Location = new System.Drawing.Point(287, 415);
+            this.buttonBuySecret.Location = new System.Drawing.Point(137, 378);
             this.buttonBuySecret.Name = "buttonBuySecret";
             this.buttonBuySecret.Size = new System.Drawing.Size(75, 23);
             this.buttonBuySecret.TabIndex = 11;
             this.buttonBuySecret.Text = "buy secret";
             this.buttonBuySecret.UseVisualStyleBackColor = true;
+            this.buttonBuySecret.Click += new System.EventHandler(this.buttonBuySecret_Click);
             // 
             // buttonShootArrow
             // 
@@ -283,11 +285,20 @@
             this.textBoxWumpusCondition.Size = new System.Drawing.Size(100, 20);
             this.textBoxWumpusCondition.TabIndex = 23;
             // 
+            // richTextBoxSecret
+            // 
+            this.richTextBoxSecret.Location = new System.Drawing.Point(60, 407);
+            this.richTextBoxSecret.Name = "richTextBoxSecret";
+            this.richTextBoxSecret.Size = new System.Drawing.Size(226, 39);
+            this.richTextBoxSecret.TabIndex = 24;
+            this.richTextBoxSecret.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.richTextBoxSecret);
             this.Controls.Add(this.textBoxWumpusCondition);
             this.Controls.Add(this.labelWumpusCondition);
             this.Controls.Add(this.buttonOneTurn);
@@ -347,6 +358,7 @@
         private System.Windows.Forms.Button buttonOneTurn;
         private System.Windows.Forms.Label labelWumpusCondition;
         private System.Windows.Forms.TextBox textBoxWumpusCondition;
+        private System.Windows.Forms.RichTextBox richTextBoxSecret;
     }
 }
 
