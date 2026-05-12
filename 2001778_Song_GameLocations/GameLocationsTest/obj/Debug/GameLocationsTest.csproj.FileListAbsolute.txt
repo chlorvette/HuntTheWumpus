@@ -1,0 +1,14 @@
+C:\Users\2001778\Documents\GitHub\HuntTheWumpus\2001778_Song_GameLocations\GameLocationsTest\bin\Debug\2001778_Song_GameLocations.exe.config
+C:\Users\2001778\Documents\GitHub\HuntTheWumpus\2001778_Song_GameLocations\GameLocationsTest\bin\Debug\2001778_Song_GameLocations.exe
+C:\Users\2001778\Documents\GitHub\HuntTheWumpus\2001778_Song_GameLocations\GameLocationsTest\bin\Debug\2001778_Song_GameLocations.pdb
+C:\Users\2001778\Documents\GitHub\HuntTheWumpus\2001778_Song_GameLocations\GameLocationsTest\bin\Debug\GameLocations.dll
+C:\Users\2001778\Documents\GitHub\HuntTheWumpus\2001778_Song_GameLocations\GameLocationsTest\bin\Debug\GameLocations.pdb
+C:\Users\2001778\Documents\GitHub\HuntTheWumpus\2001778_Song_GameLocations\GameLocationsTest\obj\Debug\GameLocationsTest.csproj.AssemblyReference.cache
+C:\Users\2001778\Documents\GitHub\HuntTheWumpus\2001778_Song_GameLocations\GameLocationsTest\obj\Debug\2001778_Song_GameLocations.exe.config
+C:\Users\2001778\Documents\GitHub\HuntTheWumpus\2001778_Song_GameLocations\GameLocationsTest\obj\Debug\_2001778_Song_GameLocations.Form1.resources
+C:\Users\2001778\Documents\GitHub\HuntTheWumpus\2001778_Song_GameLocations\GameLocationsTest\obj\Debug\_2001778_Song_GameLocations.Properties.Resources.resources
+C:\Users\2001778\Documents\GitHub\HuntTheWumpus\2001778_Song_GameLocations\GameLocationsTest\obj\Debug\GameLocationsTest.csproj.GenerateResource.cache
+C:\Users\2001778\Documents\GitHub\HuntTheWumpus\2001778_Song_GameLocations\GameLocationsTest\obj\Debug\GameLocationsTest.csproj.CoreCompileInputs.cache
+C:\Users\2001778\Documents\GitHub\HuntTheWumpus\2001778_Song_GameLocations\GameLocationsTest\obj\Debug\GameLoca.12636848.Up2Date
+C:\Users\2001778\Documents\GitHub\HuntTheWumpus\2001778_Song_GameLocations\GameLocationsTest\obj\Debug\2001778_Song_GameLocations.exe
+C:\Users\2001778\Documents\GitHub\HuntTheWumpus\2001778_Song_GameLocations\GameLocationsTest\obj\Debug\2001778_Song_GameLocations.pdb

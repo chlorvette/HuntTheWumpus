@@ -13,6 +13,7 @@ namespace GameControlUI
 {
     public class AnimatedTexture
     {
+        public int FrameCount { get { return frameCount; } set { frameCount = value; } }
         private int frameCount;
         private int columns;
         private int rows;
