@@ -124,7 +124,7 @@ namespace GameLocations
         }
         public string GetHazardWarning(List<int> adjacentCaves)
         {
-            
+            //UNFINISHED
 
             //checks if the positions of bats pits or wumpus are equal to the adjacent caves and if they are it adds the appropriate warning to the string that is returned
             //returns a string that tells the player what hazards are nearby
@@ -159,11 +159,11 @@ namespace GameLocations
             }
             else if (chance <= 6)
             {
-                return $"There is a pit in cave {PitLocations[0]} and cave {PitLocations[1]}.";
+                return $"There is a pit in cave {PitLocations[0]}.";
             }
             else if (chance <= 8)
             {
-                return $"There are bats in cave {BatLocations[0]} and cave {BatLocations[1]}.";
+                return $"There are bats in cave {BatLocations[0]}.";
             }
             else
 
@@ -235,7 +235,6 @@ namespace GameLocations
         {
             //call this after the player wins a trivia question against the wumpus to reset the timer for how long the wumpus isn't asleep for
             TurnsUntilWumpusIsAsleep = 3;
-            WumpusIsAwake = true;
         }
         public void OneTurnPasses()
         {
