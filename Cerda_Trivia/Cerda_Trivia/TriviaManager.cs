@@ -5,7 +5,7 @@ namespace Cerda_Trivia
 {
     internal class TriviaManager
     {
-        private (string Question, string[] Answers, int CorrectIndex) AllQuestionsInfo;
+        public (string Question, string[] Answers, int CorrectIndex) AllQuestionsInfo;
 
         public List<string> triviaQuestions = new List<string>
         {

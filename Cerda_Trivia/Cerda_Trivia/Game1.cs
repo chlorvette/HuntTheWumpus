@@ -26,7 +26,6 @@ namespace Cerda_Trivia
         public string Question;
         public string Possibleanswers;
         public int Correctanswer;
-        
 
         //Main question font and position
         private SpriteFont MainQuestion;
@@ -42,49 +41,43 @@ namespace Cerda_Trivia
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            // Initialize Gum
             GumService.Initialize(this);
-
-            OptionButtons();   
 
             base.Initialize();
 
-            // Example: load the first question from TriviaManager
-            var first = TriviaManager.AllQuestionsInfo[0];
-            Question = first.QuestionText;
-            Possibleanswers = string.Join("\n", first.Options);
+            var manager = new TriviaManager();
+            var first = manager.AllQuestionsInfo; // (string Question, string[] Answers, int CorrectIndex)
+            Question = first.Question;
+            Possibleanswers = string.Join("\n", first.Answers ?? new string[0]);
             Correctanswer = first.CorrectIndex;
-
-            Question = 
-            Possibleanswers = 
-            Correctanswer = 
+            OptionButtons(first.Answers);
         }
 
-        private void OptionButtons() {
-
+        private void OptionButtons(string[] options)
+        {
             var mainPanel = new StackPanel();
             mainPanel.AddToRoot();
             mainPanel.Orientation = Orientation.Horizontal;
             mainPanel.Spacing = 4;
             mainPanel.Anchor(Anchor.Center);
 
-            //Option buttons
+            // Option buttons
             var Option1 = new Button();
-            Option1.Text = "Option 1";
+            Option1.Text = options != null && options.Length > 0 ? options[0] : "Option 1";
             mainPanel.AddChild(Option1);
 
             var Option2 = new Button();
-            Option2.Text = "Option 2";
+            Option2.Text = options != null && options.Length > 1 ? options[1] : "Option 2";
             mainPanel.AddChild(Option2);
 
             var Option3 = new Button();
-            Option3.Text = "Option 3";
+            Option3.Text = options != null && options.Length > 2 ? options[2] : "Option 3";
             mainPanel.AddChild(Option3);
 
             var Option4 = new Button();
-            Option4.Text = "Option 4";
+            Option4.Text = options != null && options.Length > 3 ? options[3] : "Option 4";
             mainPanel.AddChild(Option4);
-
         }
 
         protected override void LoadContent()
@@ -96,16 +89,12 @@ namespace Cerda_Trivia
             answerList = Content.Load<SpriteFont>("Possible Answers");
 
             // TODO: use this.Content to load your game content here
-
-            // Load main question font and set its position
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
 
             GumService.Update(gameTime);
 
@@ -118,14 +107,10 @@ namespace Cerda_Trivia
 
             Vector2 mainQuestionPos = new Vector2(100, 100);
 
-            // TODO: Add your drawing code here
             _spriteBatch.Begin();
 
             _spriteBatch.DrawString(MainQuestion, Question, mainQuestionPos, Color.White);
 
-            _spriteBatch.DrawString(answerList, Possibleanswers, new Vector2(100, 200), Color.White);
-
-            // End the sprite batch
             _spriteBatch.End();
 
            GumService.Draw();
