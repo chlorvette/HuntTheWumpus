@@ -17,20 +17,54 @@
         public int TakeTurns()
         {
             Turns++;
-            Arrows--;
-            // Return
+            return Turns;
 
         }
+        public int ShootArrow()
+        {
+            if (Arrows > 0)
+            {
+                Arrows--;
+                return Arrows;
+            }
+            return Arrows;
+               
+        }
+
+        public (int, int) GainArrow(bool PassTrivia)
+        {
+            if (PassTrivia) // Pretend method for Trivia
+            {
+                Arrows++;
+                GoldCoins--;
+                return (Arrows, GoldCoins);
+  
+            }
+            else
+            {
+                // else lose Triva then won't gain arrrow
+                Arrows--;
+                return (Arrows, GoldCoins);
+            }
+        }
+
+
         public bool EncounterWumpus()
         {
-            // Answer Trivia
-            // Lose coin
+            Arrows--;
             return false;
         }
         public int Score()
         {
             EndingScore = (GoldCoins * 10) - (Turns * 1);
             return EndingScore;
+        }
+        public void DisplayRepository() 
+        {
+            Console.WriteLine($"Arrows: {Arrows}");
+            Console.WriteLine($"Gold Coins: {GoldCoins}");
+            Console.WriteLine($"Turns: {Turns}");
+            Console.WriteLine($"Ending Score: {EndingScore}");
         }
        
            
