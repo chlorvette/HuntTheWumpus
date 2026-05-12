@@ -21,6 +21,7 @@ namespace Cerda_Trivia
         // Input box variables
         GumService GumService => GumService.Default;
 
+        public Color BackgroundColor = Color.CornflowerBlue;
 
         // Trivia question variables
         public string Question;
@@ -78,6 +79,28 @@ namespace Cerda_Trivia
             var Option4 = new Button();
             Option4.Text = options != null && options.Length > 3 ? options[3] : "Option 4";
             mainPanel.AddChild(Option4);
+
+            if (Option1 != null && Option2 != null || Option3 != null || Option4 != null)
+            {
+                Option1.Click += (s, e) => {CheckAnswer(1); };
+                Option2.Click += (s, e) => CheckAnswer(2);
+                Option3.Click += (s, e) => CheckAnswer(3);
+                Option4.Click += (s, e) => CheckAnswer(4);
+            }
+        }
+
+        private void CheckAnswer(int selectedOption)
+        {
+            if (selectedOption == Correctanswer + 1) // +1 because options are 1-indexed
+            {
+                // Correct answer logic
+                Console.WriteLine("Correct!");
+            }
+            else
+            {
+                // Incorrect answer logic
+                Console.WriteLine("Incorrect!");
+            }
         }
 
         protected override void LoadContent()
