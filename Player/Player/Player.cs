@@ -59,7 +59,7 @@
             EndingScore = (GoldCoins * 10) - (Turns * 1);
             return EndingScore;
         }
-        public void DisplayRepository()
+        public void DisplayRepository() 
         {
             Console.WriteLine($"Arrows: {Arrows}");
             Console.WriteLine($"Gold Coins: {GoldCoins}");
