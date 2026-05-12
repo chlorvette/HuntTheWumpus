@@ -14,7 +14,7 @@ namespace _2006827_Tian_GameControlUI
 
         private AnimatedTexture spriteTexture;
         private const float rotation = 0;
-        private const float scale = 0.5f;
+        private const float scale = 1f;
         private const float depth = 0.5f;
 
         public Main()
@@ -34,8 +34,8 @@ namespace _2006827_Tian_GameControlUI
 
         private Viewport viewport;
         private Vector2 characterPos;
-        private const int frames = 10;
-        private const int columns = 10;
+        private const int frames = 5;
+        private const int columns = 11;
         private const int rows = 5;
         private const int framesPerSec = 10;
 
@@ -44,7 +44,7 @@ namespace _2006827_Tian_GameControlUI
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             spriteTexture.Load(Content, "ArcherSheet", frames, columns, rows, framesPerSec);
-            spriteTexture.Row = 1; // play second row
+            spriteTexture.Row = 0; // play first row
             viewport = _graphics.GraphicsDevice.Viewport;
             characterPos = new Vector2(viewport.Width / 2, viewport.Height / 2);
 
