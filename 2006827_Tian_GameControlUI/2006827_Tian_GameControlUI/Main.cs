@@ -34,10 +34,13 @@ namespace _2006827_Tian_GameControlUI
 
         private Viewport viewport;
         private Vector2 characterPos;
+        private const int moveSpeed = 5;
         private const int frames = 5;
         private const int columns = 11;
         private const int rows = 5;
         private const int framesPerSec = 10;
+        private bool isMoving = false;
+        private bool movingLeft = false;
 
         protected override void LoadContent()
         {
@@ -53,11 +56,45 @@ namespace _2006827_Tian_GameControlUI
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.Back))
+            {
                 Exit();
+            }
+            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+            {
+                characterPos.Y -= moveSpeed;
+                isMoving = true;
+                movingLeft = false;
+            }
+            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
+            {
+                characterPos.X -= moveSpeed;
+                isMoving = true;
+                movingLeft = true;
+            }
+            if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+            {
+                characterPos.Y += moveSpeed;
+                isMoving = true;
+                movingLeft = false;
+            }
+            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+            {
+                characterPos.X += moveSpeed;
+                isMoving = true;
+                movingLeft = false;
+            }
+            if (isMoving)
+            {
+                spriteTexture.Row = 2;
+            } else
+            {
+                spriteTexture.Row = 0;
+            }
 
-            // TODO: Add your update logic here
-            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                // TODO: Add your update logic here
+                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             spriteTexture.UpdateFrame(elapsed);
 
             base.Update(gameTime);
