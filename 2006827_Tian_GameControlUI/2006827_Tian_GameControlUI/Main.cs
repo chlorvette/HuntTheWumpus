@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.Direct2D1.Effects;
 using System;
 using System.Drawing.Text;
 using System.Security.Cryptography.X509Certificates;
@@ -13,9 +14,9 @@ namespace _2006827_Tian_GameControlUI
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private AnimatedTexture spriteTexture;
+        private AnimatedTexture playerTexture;
         private const float rotation = 0;
-        private const float scale = 1f;
+        private Vector2 scale = new Vector2(1f, 1f);
         private const float depth = 0.5f;
 
         public Main()
@@ -23,7 +24,7 @@ namespace _2006827_Tian_GameControlUI
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            spriteTexture = new AnimatedTexture(Vector2.Zero, rotation, scale, depth);
+            playerTexture = new AnimatedTexture(Vector2.Zero, rotation, scale, depth);
         }
 
         protected override void Initialize()
@@ -35,6 +36,7 @@ namespace _2006827_Tian_GameControlUI
 
         private Viewport viewport;
         private Vector2 characterPos;
+        private SpriteEffects playerSpriteEffect;
         private int moveSpeed = 5;
         private const int frames = 5;
         private const int columns = 11;
@@ -48,8 +50,8 @@ namespace _2006827_Tian_GameControlUI
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            spriteTexture.Load(Content, "ArcherSheet", frames, columns, rows, framesPerSec);
-            spriteTexture.Row = 0; // play first row
+            playerTexture.Load(Content, "ArcherSheet", frames, columns, rows, framesPerSec);
+            playerTexture.Row = 0; // play first row
             viewport = _graphics.GraphicsDevice.Viewport;
             characterPos = new Vector2(viewport.Width / 2, viewport.Height / 2);
 
@@ -71,7 +73,6 @@ namespace _2006827_Tian_GameControlUI
                     characterPos.Y -= moveSpeed;
                 }
                 isMoving = true;
-                movingLeft = false;
             }
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
@@ -84,16 +85,15 @@ namespace _2006827_Tian_GameControlUI
             }
             if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
             {
-                if ((characterPos.Y + spriteTexture.FrameHeight + moveSpeed) < viewport.Height)
+                if ((characterPos.Y + playerTexture.FrameHeight + moveSpeed) < viewport.Height)
                 {
                     characterPos.Y += moveSpeed;
                 }
                 isMoving = true;
-                movingLeft = false;
             }
             if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
-                if ((characterPos.X + spriteTexture.FrameWidth + moveSpeed - 20) < viewport.Width)
+                if ((characterPos.X + playerTexture.FrameWidth + moveSpeed - 20) < viewport.Width)
                 {
                     characterPos.X += moveSpeed;
                 }
@@ -103,28 +103,35 @@ namespace _2006827_Tian_GameControlUI
 
             if (isMoving)
             {
-                spriteTexture.Row = 2; // walk animation
+                playerTexture.Row = 2; // walk animation
             } else
             {
-                spriteTexture.Row = 0; // idle animation
+                playerTexture.Row = 0; // idle animation
+            }
+
+            if (movingLeft)
+            {
+                playerSpriteEffect = SpriteEffects.FlipHorizontally;
+            } else
+            {
+                playerSpriteEffect = SpriteEffects.None;
             }
 
                 // TODO: Add your update logic here
                 float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            spriteTexture.UpdateFrame(elapsed);
+            playerTexture.UpdateFrame(elapsed);
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            spriteTexture.DrawFrame(_spriteBatch, characterPos);
+            playerTexture.DrawFrame(_spriteBatch, characterPos, playerSpriteEffect);
             _spriteBatch.End();
-
             base.Draw(gameTime);
         }
     }
