@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Drawing.Text;
 using System.Security.Cryptography.X509Certificates;
 
@@ -21,7 +22,7 @@ namespace _2006827_Tian_GameControlUI
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = false;
+            IsMouseVisible = true;
             spriteTexture = new AnimatedTexture(Vector2.Zero, rotation, scale, depth);
         }
 
@@ -34,13 +35,14 @@ namespace _2006827_Tian_GameControlUI
 
         private Viewport viewport;
         private Vector2 characterPos;
-        private const int moveSpeed = 5;
+        private int moveSpeed = 5;
         private const int frames = 5;
         private const int columns = 11;
         private const int rows = 5;
         private const int framesPerSec = 10;
         private bool isMoving = false;
         private bool movingLeft = false;
+        private bool isFlipped = false;
 
         protected override void LoadContent()
         {
@@ -61,36 +63,50 @@ namespace _2006827_Tian_GameControlUI
             {
                 Exit();
             }
+            isMoving = false;
             if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
-                characterPos.Y -= moveSpeed;
+                if (characterPos.Y > -15)
+                {
+                    characterPos.Y -= moveSpeed;
+                }
                 isMoving = true;
                 movingLeft = false;
             }
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
-                characterPos.X -= moveSpeed;
+                if (characterPos.X > -10)
+                {
+                    characterPos.X -= moveSpeed;
+                }
                 isMoving = true;
                 movingLeft = true;
             }
             if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
             {
-                characterPos.Y += moveSpeed;
+                if ((characterPos.Y + spriteTexture.FrameHeight + moveSpeed) < viewport.Height)
+                {
+                    characterPos.Y += moveSpeed;
+                }
                 isMoving = true;
                 movingLeft = false;
             }
             if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
-                characterPos.X += moveSpeed;
+                if ((characterPos.X + spriteTexture.FrameWidth + moveSpeed - 20) < viewport.Width)
+                {
+                    characterPos.X += moveSpeed;
+                }
                 isMoving = true;
                 movingLeft = false;
             }
+
             if (isMoving)
             {
-                spriteTexture.Row = 2;
+                spriteTexture.Row = 2; // walk animation
             } else
             {
-                spriteTexture.Row = 0;
+                spriteTexture.Row = 0; // idle animation
             }
 
                 // TODO: Add your update logic here

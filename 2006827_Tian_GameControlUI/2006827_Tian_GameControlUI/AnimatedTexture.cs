@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,6 +25,8 @@ namespace GameControlUI
         private bool isPaused;
         public float Rotation, Scale, Depth;
         public Microsoft.Xna.Framework.Vector2 Origin;
+        public int FrameHeight;
+        public int FrameWidth;
 
         // constructor
         public AnimatedTexture(Microsoft.Xna.Framework.Vector2 origin, float rotation, float scale, float depth)
@@ -68,8 +71,8 @@ namespace GameControlUI
 
         public void DrawFrame(SpriteBatch batch, int frame, Microsoft.Xna.Framework.Vector2 screenPos)
         {
-            int FrameWidth = texture.Width / columns;
-            int FrameHeight = texture.Height / rows;
+            FrameWidth = texture.Width / columns;
+            FrameHeight = texture.Height / rows;
             Microsoft.Xna.Framework.Rectangle sourceRect = new Microsoft.Xna.Framework.Rectangle(FrameWidth * frame, FrameHeight * Row, FrameWidth, FrameHeight);
             batch.Draw(texture, screenPos, sourceRect, Microsoft.Xna.Framework.Color.White, Rotation, Origin, Scale, SpriteEffects.None, Depth);
         }
