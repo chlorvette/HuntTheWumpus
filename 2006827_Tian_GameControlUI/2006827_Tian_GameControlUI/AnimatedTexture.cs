@@ -74,34 +74,7 @@ namespace GameControlUI
             FrameWidth = texture.Width / columns;
             FrameHeight = texture.Height / rows;
             Microsoft.Xna.Framework.Rectangle sourceRect = new Microsoft.Xna.Framework.Rectangle(FrameWidth * frame, FrameHeight * Row, FrameWidth, FrameHeight);
-            batch.Draw(texture, screenPos, sourceRect, Microsoft.Xna.Framework.Color.White, Rotation, Origin, Scale, SpriteEffects.None, Depth);
-        }
-
-        public bool IsPaused
-        {
-            get { return isPaused; }
-        }
-
-        public void Reset()
-        {
-            frame = 0;
-            totalElapsed = 0f;
-        }
-
-        public void Stop()
-        {
-            Pause();
-            Reset();
-        }
-
-        public void Pause()
-        {
-            isPaused = true;
-        }
-
-        public void Play()
-        {
-            isPaused = false;
+            batch.Draw(texture, screenPos, sourceRect, Microsoft.Xna.Framework.Color.White, Rotation, Origin, Scale, spriteEffect, Depth);
         }
     }
 }
