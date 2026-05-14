@@ -111,6 +111,7 @@ namespace Cerda_Trivia
 
             //load the main question font and set its position
             MainQuestion = Content.Load<SpriteFont>("Question");
+
             answerList = Content.Load<SpriteFont>("Possible Answers");
 
             // TODO: use this.Content to load your game content here
@@ -130,7 +131,9 @@ namespace Cerda_Trivia
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            Vector2 mainQuestionPos = new Vector2(100, 100);
+            Vector2 questionSize = MainQuestion.MeasureString(Question);
+
+            Vector2 mainQuestionPos = new Vector2(GraphicsDevice.Viewport.Width / 2, 100) - questionSize / 2;
 
             _spriteBatch.Begin();
 
