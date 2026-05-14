@@ -144,7 +144,7 @@ namespace _2001778_Song_GameLocations
 
         private void buttonOneTurn_Click(object sender, EventArgs e)
         {
-            if (gameLocations.TurnsUntilWumpusIsAsleep != 0)
+            if (gameLocations.TurnsUntilWumpusIsAsleep != 0 && gameLocations.WumpusIsAwake)
             {
                 gameLocations.MoveWumpusToRandomConnectedRoom(connectedLocations);
 
@@ -179,9 +179,11 @@ namespace _2001778_Song_GameLocations
 
         private void buttonManualSetConnected_Click(object sender, EventArgs e)
         {
+            connectedLocations.Clear();
             connectedLocations.Add(int.Parse(textBoxTunnel1.Text));
             connectedLocations.Add(int.Parse(textBoxTunnel2.Text));
             connectedLocations.Add(int.Parse(textBoxTunnel3.Text));
+
         }
 
         private void buttonManualSetLocations_Click(object sender, EventArgs e)

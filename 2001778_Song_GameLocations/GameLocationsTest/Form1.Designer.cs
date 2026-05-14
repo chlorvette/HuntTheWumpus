@@ -152,13 +152,13 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(514, 29);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(198, 13);
+            this.label2.Size = new System.Drawing.Size(136, 13);
             this.label2.TabIndex = 7;
-            this.label2.Text = "choose a cave to do seomthing to 1 - 25";
+            this.label2.Text = "move player to a cave 1-25";
             // 
             // textBoxChosenLocation
             // 
-            this.textBoxChosenLocation.Location = new System.Drawing.Point(568, 45);
+            this.textBoxChosenLocation.Location = new System.Drawing.Point(517, 67);
             this.textBoxChosenLocation.Name = "textBoxChosenLocation";
             this.textBoxChosenLocation.Size = new System.Drawing.Size(100, 20);
             this.textBoxChosenLocation.TabIndex = 8;
