@@ -32,6 +32,8 @@ namespace Cerda_Trivia
         private SpriteFont MainQuestion;
         private SpriteFont answerList;
 
+        public Color MainQuestionColor = Color.White;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -82,7 +84,7 @@ namespace Cerda_Trivia
 
             if (Option1 != null && Option2 != null || Option3 != null || Option4 != null)
             {
-                Option1.Click += (s, e) => {CheckAnswer(1); };
+                Option1.Click += (s, e) => CheckAnswer(1);
                 Option2.Click += (s, e) => CheckAnswer(2);
                 Option3.Click += (s, e) => CheckAnswer(3);
                 Option4.Click += (s, e) => CheckAnswer(4);
@@ -91,15 +93,15 @@ namespace Cerda_Trivia
 
         private void CheckAnswer(int selectedOption)
         {
-            if (selectedOption == Correctanswer + 1) // +1 because options are 1-indexed
+            if (selectedOption == Correctanswer) // +1 because options are 1-indexed
             {
                 // Correct answer logic
-                Console.WriteLine("Correct!");
+                MainQuestionColor = Color.Green;
             }
             else
             {
                 // Incorrect answer logic
-                Console.WriteLine("Incorrect!");
+                MainQuestionColor = Color.Red;
             }
         }
 
@@ -132,7 +134,7 @@ namespace Cerda_Trivia
 
             _spriteBatch.Begin();
 
-            _spriteBatch.DrawString(MainQuestion, Question, mainQuestionPos, Color.White);
+            _spriteBatch.DrawString(MainQuestion, Question, mainQuestionPos, MainQuestionColor);
 
             _spriteBatch.End();
 
