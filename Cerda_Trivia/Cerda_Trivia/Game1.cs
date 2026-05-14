@@ -9,6 +9,7 @@ using MonoGameGum;
 using Gum.Forms.Controls;
 using System.Runtime.InteropServices;
 using Gum.Wireframe;
+using System.Threading.Tasks;
 
 namespace Cerda_Trivia
 {
@@ -65,7 +66,7 @@ namespace Cerda_Trivia
             mainPanel.Spacing = 4;
             mainPanel.Anchor(Anchor.Center);
 
-            // Option buttons
+            // Option buttons\
             var Option1 = new Button();
             Option1.Text = options != null && options.Length > 0 ? options[0] : "Option 1";
             mainPanel.AddChild(Option1);
@@ -84,14 +85,14 @@ namespace Cerda_Trivia
 
             if (Option1 != null && Option2 != null || Option3 != null || Option4 != null)
             {
-                Option1.Click += (s, e) => CheckAnswer(1);
-                Option2.Click += (s, e) => CheckAnswer(2);
-                Option3.Click += (s, e) => CheckAnswer(3);
-                Option4.Click += (s, e) => CheckAnswer(4);
+                Option1.Click += (s, e) => CheckAnswer(1, Option1, Option2, Option3, Option4);
+                Option2.Click += (s, e) => CheckAnswer(2, Option2, Option1, Option3, Option4);
+                Option3.Click += (s, e) => CheckAnswer(3, Option3, Option1, Option2, Option4);
+                Option4.Click += (s, e) => CheckAnswer(4, Option4, Option1, Option2, Option3);
             }
         }
 
-        private void CheckAnswer(int selectedOption)
+        private async void CheckAnswer(int selectedOption, Button Option1, Button Option2, Button Option3, Button Option4)
         {
             if (selectedOption == Correctanswer) // +1 because options are 1-indexed
             {
@@ -102,6 +103,13 @@ namespace Cerda_Trivia
             {
                 // Incorrect answer logic
                 MainQuestionColor = Color.Red;
+                Option1.IsEnabled = false;
+                Option2.IsEnabled = false;
+                Option3.IsEnabled = false;
+                Option4.IsEnabled = false;
+                await Task.Delay(1000); // Wait for 1 second before closin the program
+                base.Exit();
+
             }
         }
 
