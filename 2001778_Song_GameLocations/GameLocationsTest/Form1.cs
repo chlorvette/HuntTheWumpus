@@ -47,6 +47,7 @@ namespace _2001778_Song_GameLocations
             textBoxWumpusLocation.Text = $"Wumpus Location: {gameLocations.WumpusLocation}";
             richTextBoxConnectedCaves.Text = $"Connected Caves: {string.Join(", ", connectedLocations)}";
             textBoxWumpusCondition.Text = gameLocations.WumpusIsAwake.ToString();
+            //richTextBoxLocations.Text = $"Wumpus Location: {gameLocations.WumpusLocation}\nPit Locations: {string.Join(", ", gameLocations.PitLocations)}\nBat Locations: {string.Join(", ", gameLocations.BatLocations)}"; 
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -155,6 +156,42 @@ namespace _2001778_Song_GameLocations
         private void buttonBuySecret_Click(object sender, EventArgs e)
         {
             richTextBoxSecret.Text = gameLocations.BuySecret();
+        }
+
+        private void buttonCheckHazards_Click(object sender, EventArgs e)
+        {
+            string message = "";
+            bool[] hazards = gameLocations.CheckHazards();
+            if (hazards[0])
+            {
+                message += "You fell into a pit!\n";
+            }
+            if (hazards[1])
+            {
+                message += "The bats took you away!\n";
+            }
+            if (hazards[2])
+            {
+                message += "You are FIGHTING the wumpus!\n";
+            }
+            MessageBox.Show(message);
+        }
+
+        private void buttonManualSetConnected_Click(object sender, EventArgs e)
+        {
+            connectedLocations.Add(int.Parse(textBoxTunnel1.Text));
+            connectedLocations.Add(int.Parse(textBoxTunnel2.Text));
+            connectedLocations.Add(int.Parse(textBoxTunnel3.Text));
+        }
+
+        private void buttonManualSetLocations_Click(object sender, EventArgs e)
+        {
+            gameLocations.WumpusLocation = int.Parse(textBoxWumpus.Text);
+            gameLocations.PitLocations[0] = int.Parse(textBoxPit1.Text);
+            gameLocations.PitLocations[1] = int.Parse(textBoxPit2.Text);
+            gameLocations.BatLocations[0] = int.Parse(textBoxBat1.Text);
+            gameLocations.BatLocations[1] = int.Parse(textBoxBat2.Text);
+
         }
     }
 }

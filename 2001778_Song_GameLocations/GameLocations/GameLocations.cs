@@ -8,9 +8,9 @@ namespace GameLocations
 {
     public class GameLocations
     {
-        public int[] PitLocations { get; set; }
+        public int[] PitLocations { get; set; } = new int[2];
         public int PlayerLocation { get; set; }
-        public int[] BatLocations { get; set; }
+        public int[] BatLocations { get; set; } = new int[2];
         public int WumpusLocation { get; set; }
         public int StartingLocation { get; set; }
         public bool WumpusIsAwake { get; set; } = false;
@@ -23,15 +23,15 @@ namespace GameLocations
         public void MakeHazardLocations()
         {
             //use this method to set the locations of the pits and bats at the start of the game
-            //REPLACE THESE NUMBERS(1,25) WITH THE TOTAL NUMBER OF CAVES IN YOUR GAME
+            //REPLACE THESE NUMBERS(1,26) WITH THE TOTAL NUMBER OF CAVES IN YOUR GAME
             PitLocations = new int[2];
             BatLocations = new int[2];
             while (true)
             {
-                PitLocations[0] = random.Next(1, 25);
-                PitLocations[1] = random.Next(1, 25);
-                BatLocations[0] = random.Next(1, 25);
-                BatLocations[1] = random.Next(1, 25);
+                PitLocations[0] = random.Next(1, 26);
+                PitLocations[1] = random.Next(1, 26);
+                BatLocations[0] = random.Next(1, 26);
+                BatLocations[1] = random.Next(1, 26);
                 if (PitLocations[0] != PitLocations[1] && BatLocations[0] != BatLocations[1] && PitLocations[0] != BatLocations[0] && PitLocations[0] != BatLocations[1] && PitLocations[1] != BatLocations[0] && PitLocations[1] != BatLocations[1])
                 {
                     break;
@@ -44,11 +44,11 @@ namespace GameLocations
         public void SetPlayerStartingLocation()
         {
 
-            //REPLACE THESE NUMBERS(1,25) WITH THE TOTAL NUMBER OF CAVES IN YOUR GAME
+            //REPLACE THESE NUMBERS(1,26) WITH THE TOTAL NUMBER OF CAVES IN YOUR GAME
             //YOU MUST SET THIS AFTER THE HAZARD LOCATIONS HAVE BEEN SET TO AVOID THE PLAYER STARTING IN THE SAME LOCATION AS A HAZARD but before the wumpus location is set to avoid the player starting in the same location as the wumpus
             while (true)
             {
-                int startingLocation = random.Next(1, 25);
+                int startingLocation = random.Next(1, 26);
                 if (startingLocation != PitLocations[0] && startingLocation != PitLocations[1] && startingLocation != BatLocations[0] && startingLocation != BatLocations[1])
                 {
                     PlayerLocation = startingLocation;
@@ -93,10 +93,10 @@ namespace GameLocations
         {
             //use this after is bat location is true to move the player to a random location
 
-            //REPLACE THESE NUMBERS(1,25) WITH THE TOTAL NUMBER OF CAVES IN YOUR GAME
+            //REPLACE THESE NUMBERS(1,26) WITH THE TOTAL NUMBER OF CAVES IN YOUR GAME
             while (true)
             {
-                int newLocation = random.Next(1, 25);
+                int newLocation = random.Next(1, 26);
                 if (newLocation != PlayerLocation)
                 {
                     PlayerLocation = newLocation;
@@ -109,11 +109,11 @@ namespace GameLocations
         {
 
 
-            //REPLACE THESE NUMBERS(1,25) WITH THE TOTAL NUMBER OF CAVES IN YOUR GAME
+            //REPLACE THESE NUMBERS(1,26) WITH THE TOTAL NUMBER OF CAVES IN YOUR GAME
             //use this methodto set the wumpus location at the start of the game   
             while (true)
             {
-                int newLocation = random.Next(1, 25);
+                int newLocation = random.Next(1, 26);
                 if (newLocation != PlayerLocation)
                 {
                     WumpusLocation = newLocation;
@@ -136,11 +136,11 @@ namespace GameLocations
 
 
             }
-            else if (adjacentCaves.Contains(PitLocations[0]) || adjacentCaves.Contains(PitLocations[1]))
+            if (adjacentCaves.Contains(PitLocations[0]) || adjacentCaves.Contains(PitLocations[1]))
             {
                warning += "You feel a cold wind blowing from a nearby cavern. ";
             }
-            else if (adjacentCaves.Contains(BatLocations[0]) || adjacentCaves.Contains(BatLocations[1]))
+            if (adjacentCaves.Contains(BatLocations[0]) || adjacentCaves.Contains(BatLocations[1]))
             {
                 warning += "You hear rustling of bat wings. ";
             }
@@ -248,6 +248,15 @@ namespace GameLocations
                     WumpusIsAwake = false;
                 }
             }
+        }
+        public bool[] CheckHazards()
+        {
+            //the first one is if there is a pit in the room, the second one is if there are bats in the room and the third one is if the wumpus is in the room
+            bool[] hazards = new bool[3];
+            hazards[0] = IsPitLocation(PlayerLocation);
+            hazards[1] = IsBatLocation(PlayerLocation);
+            hazards[2] = PlayerLocation == WumpusLocation;
+            return hazards;
         }
     }
 }
