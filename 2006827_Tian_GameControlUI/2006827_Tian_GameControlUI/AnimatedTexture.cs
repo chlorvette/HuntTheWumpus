@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,6 @@ namespace GameControlUI
 {
     public class AnimatedTexture
     {
-        public int FrameCount { get { return frameCount; } set { frameCount = value; } }
         private int frameCount;
         private int columns;
         private int rows;
@@ -23,11 +23,14 @@ namespace GameControlUI
         private int frame;
         private float totalElapsed;
         private bool isPaused;
-        public float Rotation, Scale, Depth;
+        public float Rotation, Depth;
+        public Microsoft.Xna.Framework.Vector2 Scale;
         public Microsoft.Xna.Framework.Vector2 Origin;
+        public int FrameHeight;
+        public int FrameWidth;
 
         // constructor
-        public AnimatedTexture(Microsoft.Xna.Framework.Vector2 origin, float rotation, float scale, float depth)
+        public AnimatedTexture(Microsoft.Xna.Framework.Vector2 origin, float rotation, Microsoft.Xna.Framework.Vector2 scale, float depth)
         {
             this.Origin = origin;
             this.Rotation = rotation;
@@ -62,44 +65,17 @@ namespace GameControlUI
             }
         }
 
-        public void DrawFrame(SpriteBatch batch, Microsoft.Xna.Framework.Vector2 screenPos)
+        public void DrawFrame(SpriteBatch batch, Microsoft.Xna.Framework.Vector2 screenPos, Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffect)
         {
-            DrawFrame(batch, frame, screenPos);
+            DrawFrame(batch, frame, screenPos, spriteEffect);
         }
 
-        public void DrawFrame(SpriteBatch batch, int frame, Microsoft.Xna.Framework.Vector2 screenPos)
+        public void DrawFrame(SpriteBatch batch, int frame, Microsoft.Xna.Framework.Vector2 screenPos, Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffect)
         {
-            int FrameWidth = texture.Width / columns;
-            int FrameHeight = texture.Height / rows;
+            FrameWidth = texture.Width / columns;
+            FrameHeight = texture.Height / rows;
             Microsoft.Xna.Framework.Rectangle sourceRect = new Microsoft.Xna.Framework.Rectangle(FrameWidth * frame, FrameHeight * Row, FrameWidth, FrameHeight);
-            batch.Draw(texture, screenPos, sourceRect, Microsoft.Xna.Framework.Color.White, Rotation, Origin, Scale, SpriteEffects.None, Depth);
-        }
-
-        public bool IsPaused
-        {
-            get { return isPaused; }
-        }
-
-        public void Reset()
-        {
-            frame = 0;
-            totalElapsed = 0f;
-        }
-
-        public void Stop()
-        {
-            Pause();
-            Reset();
-        }
-
-        public void Pause()
-        {
-            isPaused = true;
-        }
-
-        public void Play()
-        {
-            isPaused = false;
+            batch.Draw(texture, screenPos, sourceRect, Microsoft.Xna.Framework.Color.White, Rotation, Origin, Scale, spriteEffect, Depth);
         }
     }
 }
