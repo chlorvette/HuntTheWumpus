@@ -44,7 +44,6 @@ namespace _2006827_Tian_GameControlUI
         private const int framesPerSec = 10;
         private bool isMoving = false;
         private bool movingLeft = false;
-        private bool isFlipped = false;
 
         protected override void LoadContent()
         {
@@ -117,8 +116,8 @@ namespace _2006827_Tian_GameControlUI
                 playerSpriteEffect = SpriteEffects.None;
             }
 
-                // TODO: Add your update logic here
-                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            // TODO: Add your update logic here
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
             playerTexture.UpdateFrame(elapsed);
 
             base.Update(gameTime);
