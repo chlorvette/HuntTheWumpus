@@ -15,6 +15,7 @@ namespace _2006827_Tian_GameControlUI
         private SpriteBatch _spriteBatch;
 
         private AnimatedTexture playerTexture;
+        private Tilemap tilemap;
         private const float rotation = 0;
         private Vector2 scale = new Vector2(1f, 1f);
         private const float depth = 0.5f;
@@ -25,6 +26,7 @@ namespace _2006827_Tian_GameControlUI
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             playerTexture = new AnimatedTexture(Vector2.Zero, rotation, scale, depth);
+            tilemap = new Tilemap(Content, "map/Dungeon_Tileset", @"..\..\..\Content\map\tilemapLayer0.txt", 25, 15, 9, 9, new Vector2(2f, 2f));
         }
 
         protected override void Initialize()
@@ -51,6 +53,7 @@ namespace _2006827_Tian_GameControlUI
 
             playerTexture.Load(Content, "ArcherSheet", frames, columns, rows, framesPerSec);
             playerTexture.Row = 0; // play first row
+            tilemap.Load(Content, "map/Dungeon_Tileset");
             viewport = _graphics.GraphicsDevice.Viewport;
             characterPos = new Vector2(viewport.Width / 2, viewport.Height / 2);
 
