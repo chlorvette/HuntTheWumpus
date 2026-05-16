@@ -1,6 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
+using SpriteEffects = Microsoft.Xna.Framework.Graphics.SpriteEffects;
+using Color = Microsoft.Xna.Framework.Color;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -24,13 +28,13 @@ namespace GameControlUI
         private float totalElapsed;
         private bool isPaused;
         public float Rotation, Depth;
-        public Microsoft.Xna.Framework.Vector2 Scale;
-        public Microsoft.Xna.Framework.Vector2 Origin;
+        public Vector2 Scale;
+        public Vector2 Origin;
         public int FrameHeight;
         public int FrameWidth;
 
         // constructor
-        public AnimatedTexture(Microsoft.Xna.Framework.Vector2 origin, float rotation, Microsoft.Xna.Framework.Vector2 scale, float depth)
+        public AnimatedTexture(Vector2 origin, float rotation, Vector2 scale, float depth)
         {
             this.Origin = origin;
             this.Rotation = rotation;
@@ -65,17 +69,17 @@ namespace GameControlUI
             }
         }
 
-        public void DrawFrame(SpriteBatch batch, Microsoft.Xna.Framework.Vector2 screenPos, Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffect)
+        public void DrawFrame(SpriteBatch batch, Vector2 screenPos, SpriteEffects spriteEffect)
         {
             DrawFrame(batch, frame, screenPos, spriteEffect);
         }
 
-        public void DrawFrame(SpriteBatch batch, int frame, Microsoft.Xna.Framework.Vector2 screenPos, Microsoft.Xna.Framework.Graphics.SpriteEffects spriteEffect)
+        public void DrawFrame(SpriteBatch batch, int frame, Vector2 screenPos, SpriteEffects spriteEffect)
         {
             FrameWidth = texture.Width / columns;
             FrameHeight = texture.Height / rows;
-            Microsoft.Xna.Framework.Rectangle sourceRect = new Microsoft.Xna.Framework.Rectangle(FrameWidth * frame, FrameHeight * Row, FrameWidth, FrameHeight);
-            batch.Draw(texture, screenPos, sourceRect, Microsoft.Xna.Framework.Color.White, Rotation, Origin, Scale, spriteEffect, Depth);
+            Microsoft.Xna.Framework.Rectangle sourceRect = new Rectangle(FrameWidth * frame, FrameHeight * Row, FrameWidth, FrameHeight);
+            batch.Draw(texture, screenPos, sourceRect, Color.White, Rotation, Origin, Scale, spriteEffect, Depth);
         }
     }
 }
