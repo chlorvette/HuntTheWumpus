@@ -2,8 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SharpDX.Direct2D1.Effects;
 using System;
+using System.Diagnostics;
 using System.Drawing.Text;
 using System.Security.Cryptography.X509Certificates;
 
