@@ -20,9 +20,11 @@ namespace GameControlUI
         private (int, int)[,] coordinateTilemap;
         private string[,] templateTilemap;
         private Vector2 scale;
+        private string tilesetImagePath;
 
         public Tilemap(ContentManager content, string tilesetImagePath, string tilemapTemplatePath, int tileDimensions, (int, int) tilemapDimensions, Vector2 scale, string tilesetKeyPath, int choicesPerType, int totalTypes)
         {
+            this.tilesetImagePath = tilesetImagePath;
             this.scale = scale;
             this.tileDimensions = tileDimensions;
             int tilemapRows = tilemapDimensions.Item1;
@@ -121,7 +123,7 @@ namespace GameControlUI
             }
         }
 
-        public void Load(ContentManager content, string tilesetImagePath)
+        public void Load(ContentManager content)
         {
             this.tileset = content.Load<Texture2D>(tilesetImagePath);
         }
