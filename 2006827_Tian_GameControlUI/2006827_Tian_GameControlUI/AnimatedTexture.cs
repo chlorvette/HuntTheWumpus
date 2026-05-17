@@ -78,7 +78,7 @@ namespace GameControlUI
         {
             FrameWidth = texture.Width / columns;
             FrameHeight = texture.Height / rows;
-            Microsoft.Xna.Framework.Rectangle sourceRect = new Rectangle(FrameWidth * frame, FrameHeight * Row, FrameWidth, FrameHeight);
+            Rectangle sourceRect = new Rectangle(FrameWidth * frame, FrameHeight * Row, FrameWidth, FrameHeight);
             batch.Draw(texture, screenPos, sourceRect, Color.White, Rotation, Origin, Scale, spriteEffect, Depth);
         }
     }
