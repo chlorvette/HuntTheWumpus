@@ -21,14 +21,17 @@ namespace _2006827_Tian_GameControlUI
         private Vector2 scale = new Vector2(1f, 1f);
         private const float depth = 0.5f;
 
+        private int tilesetChoicesPerType = 12;
+        private int tilesetTotalTypes = 13;
+
         public Main()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             playerTexture = new AnimatedTexture(Vector2.Zero, rotation, scale, depth);
-            tilemapLayerZero = new Tilemap(Content, "map/Dungeon_Tileset", @"..\..\..\Content\map\tilemapLayer0Template.txt", 16, (15, 25), new Vector2(2f, 2f), @"..\..\..\Content\map\tilesetKey.txt", 12, 7);
-            tilemapLayerOne = new Tilemap(Content, "map/Dungeon_Tileset", @"..\..\..\Content\map\tilemapLayer1Template.txt", 16, (15, 25), new Vector2(2f, 2f), @"..\..\..\Content\map\tilesetKey.txt", 12, 7);
+            tilemapLayerZero = new Tilemap(Content, "map/Dungeon_Tileset", @"..\..\..\Content\map\tilemapLayer0Template.txt", 16, (15, 25), new Vector2(2f, 2f), @"..\..\..\Content\map\tilesetKey.txt", tilesetChoicesPerType, tilesetTotalTypes);
+            tilemapLayerOne = new Tilemap(Content, "map/Dungeon_Tileset", @"..\..\..\Content\map\tilemapLayer1Template.txt", 16, (15, 25), new Vector2(2f, 2f), @"..\..\..\Content\map\tilesetKey.txt", tilesetChoicesPerType, tilesetTotalTypes);
 
         }
 
