@@ -18,20 +18,28 @@ namespace _2006827_Tian_GameControlUI
         private Tilemap tilemapLayerZero;
         private Tilemap tilemapLayerOne;
         private const float rotation = 0;
-        private Vector2 scale = new Vector2(1f, 1f);
+        private Vector2 playerScale = new Vector2(1f, 1f);
         private const float depth = 0.5f;
 
+        private Vector2 tileScale = new Vector2(2f, 2f);
         private int tilesetChoicesPerType = 12;
         private int tilesetTotalTypes = 13;
+        private int tilesetTileDimensions = 16;
+        private int tilemapWidthTiles = 25;
+        private int tilemapHeightTiles = 15;
+
+        private string tilesetKeyPath = @"..\..\..\Content\map\tilesetKey.txt";
+        private string tilesetImageName = "map/Dungeon_Tileset";
+        private string tilemapsLocation = @"..\..\..\Content\map\";
 
         public Main()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            playerTexture = new AnimatedTexture(Vector2.Zero, rotation, scale, depth);
-            tilemapLayerZero = new Tilemap(Content, "map/Dungeon_Tileset", @"..\..\..\Content\map\tilemapLayer0Template.txt", 16, (15, 25), new Vector2(2f, 2f), @"..\..\..\Content\map\tilesetKey.txt", tilesetChoicesPerType, tilesetTotalTypes);
-            tilemapLayerOne = new Tilemap(Content, "map/Dungeon_Tileset", @"..\..\..\Content\map\tilemapLayer1Template.txt", 16, (15, 25), new Vector2(2f, 2f), @"..\..\..\Content\map\tilesetKey.txt", tilesetChoicesPerType, tilesetTotalTypes);
+            playerTexture = new AnimatedTexture(Vector2.Zero, rotation, playerScale, depth);
+            tilemapLayerZero = new Tilemap(Content, tilesetImageName, tilemapsLocation+ "tilemapLayer0Template.txt", tilesetTileDimensions, (tilemapHeightTiles, tilemapWidthTiles), tileScale, tilesetKeyPath, tilesetChoicesPerType, tilesetTotalTypes);
+            tilemapLayerOne = new Tilemap(Content, tilesetImageName, tilemapsLocation + "tilemapLayer1Template.txt", tilesetTileDimensions, (tilemapHeightTiles, tilemapWidthTiles), tileScale, tilesetKeyPath, tilesetChoicesPerType, tilesetTotalTypes);
 
         }
 
