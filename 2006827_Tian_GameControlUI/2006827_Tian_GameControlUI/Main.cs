@@ -15,7 +15,8 @@ namespace _2006827_Tian_GameControlUI
         private SpriteBatch _spriteBatch;
 
         private AnimatedTexture playerTexture;
-        private Tilemap tilemap;
+        private Tilemap tilemapLayerZero;
+        private Tilemap tilemapLayerOne;
         private const float rotation = 0;
         private Vector2 scale = new Vector2(1f, 1f);
         private const float depth = 0.5f;
@@ -26,7 +27,9 @@ namespace _2006827_Tian_GameControlUI
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             playerTexture = new AnimatedTexture(Vector2.Zero, rotation, scale, depth);
-            tilemap = new Tilemap(Content, "map/Dungeon_Tileset", @"..\..\..\Content\map\tilemapLayer0.txt", 25, 15, 9, 9, new Vector2(2f, 2f));
+            tilemapLayerZero = new Tilemap(Content, "map/Dungeon_Tileset", @"..\..\..\Content\map\tilemapLayer0Template.txt", 16, (15, 25), new Vector2(2f, 2f), @"..\..\..\Content\map\tilesetKey.txt", 12, 7);
+            tilemapLayerOne = new Tilemap(Content, "map/Dungeon_Tileset", @"..\..\..\Content\map\tilemapLayer1Template.txt", 16, (15, 25), new Vector2(2f, 2f), @"..\..\..\Content\map\tilesetKey.txt", 12, 7);
+
         }
 
         protected override void Initialize()
@@ -53,7 +56,8 @@ namespace _2006827_Tian_GameControlUI
 
             playerTexture.Load(Content, "ArcherSheet", frames, columns, rows, framesPerSec);
             playerTexture.Row = 0; // play first row
-            tilemap.Load(Content, "map/Dungeon_Tileset");
+            tilemapLayerZero.Load(Content, "map/Dungeon_Tileset");
+            tilemapLayerOne.Load(Content, "map/Dungeon_Tileset");
             viewport = _graphics.GraphicsDevice.Viewport;
             characterPos = new Vector2(viewport.Width / 2, viewport.Height / 2);
 
@@ -131,7 +135,9 @@ namespace _2006827_Tian_GameControlUI
             GraphicsDevice.Clear(Color.White);
 
             // TODO: Add your drawing code here
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            tilemapLayerZero.Draw(_spriteBatch);
+            tilemapLayerOne.Draw(_spriteBatch);
             playerTexture.DrawFrame(_spriteBatch, characterPos, playerSpriteEffect);
             _spriteBatch.End();
             base.Draw(gameTime);
