@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,7 +14,11 @@ namespace _2001778_Song_GameLocations
 
     public partial class Form1 : Form
     {
-        GameLocations.GameLocations gameLocations = new GameLocations.GameLocations();
+        List<int> connectedLocations = new List<int>();
+       
+        GameLocations.GameLocations gameLocations = new GameLocations.GameLocations(25);
+        //25 is a placeholder, you should use the count of alex's list of caves
+        Random random = new Random();
 
 
         public Form1()
@@ -42,6 +46,10 @@ namespace _2001778_Song_GameLocations
         private void timer1_Tick(object sender, EventArgs e)
         {
             textBoxPlayerLocation.Text = $"Player Location: {gameLocations.PlayerLocation}";
+            textBoxWumpusLocation.Text = $"Wumpus Location: {gameLocations.WumpusLocation}";
+            richTextBoxConnectedCaves.Text = $"Connected Caves: {string.Join(", ", connectedLocations)}";
+            textBoxWumpusCondition.Text = gameLocations.WumpusIsAwake.ToString();
+            //richTextBoxLocations.Text = $"Wumpus Location: {gameLocations.WumpusLocation}\nPit Locations: {string.Join(", ", gameLocations.PitLocations)}\nBat Locations: {string.Join(", ", gameLocations.BatLocations)}"; 
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -64,6 +72,129 @@ namespace _2001778_Song_GameLocations
 
         private void textBoxStartingLocation_TextChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void buttonShootArrow_Click(object sender, EventArgs e)
+        {
+            labelHit.Text = gameLocations.ShootArrow(int.Parse(textBoxChosenLocation.Text)) ? "Hit!" : "Miss!";
+            if (gameLocations.ShootArrow(int.Parse(textBoxChosenLocation.Text))==false)
+            {
+                
+                gameLocations.MoveWumpusAfterArrowMiss(connectedLocations);
+            }
+        }
+
+        private void buttonGenerateRandomConnected_Click(object sender, EventArgs e)
+        {
+            //generate random numbers to represent connected locations
+
+            connectedLocations.Clear();
+            while (connectedLocations.Count < 3)
+            {
+                int randomLocation = random.Next(1, 26);
+                if (!connectedLocations.Contains(randomLocation))
+                {
+                    connectedLocations.Add(randomLocation);
+                }
+            }
+
+        }
+
+        private void buttonWarning_Click(object sender, EventArgs e)
+        {
+            //this is suppsoed to be the adjacent locations not the connectedLocations but for testing purposes we will just use the connected locations
+            richTextBoxWarnings.Text = gameLocations.GetHazardWarning(connectedLocations);
+        }
+
+        private void richTextBoxConnectedCaves_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void GenerateRandomConnectedRooms()
+        {
+            connectedLocations.Clear();
+            while (connectedLocations.Count < 3)
+            {
+                int randomLocation = random.Next(1, 26);
+                if (!connectedLocations.Contains(randomLocation))
+                {
+                    connectedLocations.Add(randomLocation);
+                }
+            }
+        }
+
+        private void textBoxWumpusLocation_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonWinTrivia_Click(object sender, EventArgs e)
+        {
+            int numberOfRooms = random.Next(2, 5);
+            while (numberOfRooms > 0)
+            {
+                gameLocations.MoveWumpusToRandomConnectedRoom(connectedLocations);
+                //in an actual implementation it would be like this but after you would do like GetTunnels(gameLocations.WumpusLocation) to get the connected rooms and then pass that to the MoveWumpusToRandomConnectedRoom method
+                GenerateRandomConnectedRooms();
+                numberOfRooms--;
+            }
+            gameLocations.ResetWumpusAsleepTimer();
+
+
+        }
+
+        private void buttonOneTurn_Click(object sender, EventArgs e)
+        {
+            if (gameLocations.TurnsUntilWumpusIsAsleep != 0 && gameLocations.WumpusIsAwake)
+            {
+                gameLocations.MoveWumpusToRandomConnectedRoom(connectedLocations);
+
+            }
+            gameLocations.OneTurnPasses();
+            
+        }
+
+        private void buttonBuySecret_Click(object sender, EventArgs e)
+        {
+            richTextBoxSecret.Text = gameLocations.BuySecret();
+        }
+
+        private void buttonCheckHazards_Click(object sender, EventArgs e)
+        {
+            string message = "";
+            bool[] hazards = gameLocations.CheckHazards();
+            if (hazards[0])
+            {
+                message += "You fell into a pit!\n";
+            }
+            if (hazards[1])
+            {
+                message += "The bats took you away!\n";
+            }
+            if (hazards[2])
+            {
+                message += "You are FIGHTING the wumpus!\n";
+            }
+            MessageBox.Show(message);
+        }
+
+        private void buttonManualSetConnected_Click(object sender, EventArgs e)
+        {
+            connectedLocations.Clear();
+            connectedLocations.Add(int.Parse(textBoxTunnel1.Text));
+            connectedLocations.Add(int.Parse(textBoxTunnel2.Text));
+            connectedLocations.Add(int.Parse(textBoxTunnel3.Text));
+
+        }
+
+        private void buttonManualSetLocations_Click(object sender, EventArgs e)
+        {
+            gameLocations.WumpusLocation = int.Parse(textBoxWumpus.Text);
+            gameLocations.PitLocations[0] = int.Parse(textBoxPit1.Text);
+            gameLocations.PitLocations[1] = int.Parse(textBoxPit2.Text);
+            gameLocations.BatLocations[0] = int.Parse(textBoxBat1.Text);
+            gameLocations.BatLocations[1] = int.Parse(textBoxBat2.Text);
 
         }
     }
