@@ -4,6 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
+using System.IO;
+using System.Xml.Linq;
+using Microsoft.SqlServer.Server;
 
 namespace Cave
 
@@ -29,10 +33,7 @@ namespace Cave
             RoomTunnel = new List<Room>();
         }
 
-        public static implicit operator List<object>(Room v)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 
     public class Cave
@@ -53,7 +54,10 @@ namespace Cave
 
         }
 
+        //
         // PUBLIC METHODS
+        //
+
         public Room GetRoom(int roomNumber)
         {
             return roomList[roomNumber - 1];
@@ -79,21 +83,37 @@ namespace Cave
                 var room = GetRoom(roomNumber);
             return room.RoomTunnel;
         }
+        public bool IsInRoomIndex(int roomNumber)
+        {
+            //if its in the index
+            try
+            {
+                Room test = roomList[roomNumber];
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
 
+        }
 
+        public List<Room> RegenerateTunnels(List<Room> rooms)
+        {
+            rooms = ClearTunnels(rooms);
+            rooms = GenerateTunnels(rooms);
+            return rooms;
+        }
 
+        
 
-
-
-
-
-
-
-
-
-
+        //
+        //
         // PRIVATE METHODS
-        private List<Room> FindAdjacentRooms(List<Room> rooms)
+        //
+        //
+
+        private List<Room> PopulateAdjacentRooms(List<Room> rooms)
         {
             //Find the adjacent rooms for each room in the layout and add them to the adjacent room list
              
@@ -115,7 +135,27 @@ namespace Cave
                 return rooms;
 
         }
-        public List<Room> GenerateLayout()
+        private void PrintLayout(List<Room> rooms)
+        {
+            foreach (var room in rooms)
+            {
+                Debug.WriteLine($"Room Number: {room.RoomNumber} \n");
+                Debug.WriteLine($"Adjacent Rooms: {string.Join(", ", room.AdjacentRooms.Select(r => r.RoomNumber))} \n");
+                Debug.WriteLine($"Tunnel Rooms: {string.Join(", ", room.RoomTunnel.Select(r => r.RoomNumber))} \n");
+                Debug.WriteLine("\n");
+            }
+        }
+
+        private List<Room> ClearTunnels(List<Room> rooms)
+        {
+            foreach (var room in rooms)
+            {
+                room.RoomTunnel.Clear();
+            }
+            return rooms;
+        }
+
+        private List<Room> GenerateLayout()
         {
             List<Room> rooms = new List<Room>();
             int RoomNumber = 1;
@@ -129,60 +169,59 @@ namespace Cave
             }
             Random rand = new Random();
             // populate adjacency once for all rooms
-            rooms = FindAdjacentRooms(rooms);
+            rooms = PopulateAdjacentRooms(rooms);
             rooms = GenerateTunnels(rooms);
 
 
             return rooms;
         }
+    
         private List<Room> GenerateTunnels(List<Room> rooms)
         {
-            //
+            if (rooms == null || rooms.Count == 0) 
+                return rooms;
+
             List<Room> Path = new List<Room>();
             List<Room> roomsNotHit = new List<Room>(rooms);
-            Debug.WriteLine(rooms.ToString());
 
-            Room currnetRoom = rooms[1];
-            Path.Add(currnetRoom);
+            Room currentRoom = rooms[1];
+            Path.Add(currentRoom);
+            roomsNotHit.Remove(currentRoom);
 
             List<Room> ValidRooms = new List<Room>();
             Random rand = new Random();
 
-
-            int debug = 0;
-            
             while (roomsNotHit.Any())
             {
-                //Go Though a random tunnel that hasnt been entered add it to the travel path
-                //Remove tunnel you wentthough 
-                //If a room has no vaild tunnels then go back to the previous room in the list
-                foreach (var roomNextTo in currnetRoom.AdjacentRooms)
+                ValidRooms.Clear();
+                foreach (var roomNextTo in currentRoom.AdjacentRooms)
                 {
                     if (roomsNotHit.Any(r => r.RoomNumber == roomNextTo.RoomNumber))
                         ValidRooms.Add(roomNextTo);
                 }
-                if (!roomsNotHit.Any())
-                {
-                    //break out of the loop if there are no more rooms to hit
-                    break;
-                }
+
                 if (ValidRooms.Count == 0)
                 {
-                    if (Path.Count == 0)
+                    if (Path.Count <= 1)
                         break;
-                    currnetRoom = Path[Path.Count - 1];
                     Path.RemoveAt(Path.Count - 1);
+                    currentRoom = Path[Path.Count - 1];
                     continue;
                 }
+
                 Room nextRoom = ValidRooms[rand.Next(ValidRooms.Count)];
-                currnetRoom.RoomTunnel.Add(nextRoom);
-                nextRoom.RoomTunnel.Add(currnetRoom);
-                Path.Add(nextRoom);
-                roomsNotHit.Remove(currnetRoom);
-                currnetRoom = nextRoom;
-                ValidRooms = new List<Room>();
+
+                var nextRoomRef = roomsNotHit.First(r => r.RoomNumber == nextRoom.RoomNumber);
+
+                currentRoom.RoomTunnel.Add(nextRoomRef);
+                nextRoomRef.RoomTunnel.Add(currentRoom);
+
+                Path.Add(nextRoomRef);
+                roomsNotHit.Remove(nextRoomRef);
+                currentRoom = nextRoomRef;
             }
             return rooms;
         }
+
     }
 }
