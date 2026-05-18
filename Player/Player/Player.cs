@@ -6,7 +6,7 @@
         public int GoldCoins { get; set; }
         public int Turns { get; set; }
         public int EndingScore { get; set; }
-        public bool IsAlive { get; private set; } = true; 
+        public bool IsAlive { get; set; } = true; 
 
         public Player()
         {
@@ -17,7 +17,7 @@
             EndingScore = playerManager.EndingScore;
         }
 
-        public int TakeTurns()
+        public int TakeTurn()
         {
             if (!IsAlive)
             {
@@ -31,15 +31,16 @@
 
         public bool ShootArrow()
         {
+            if (!IsAlive)
+            {
+                return false;
+            }
             if (Arrows > 0)
             {
                 Arrows--;
                 return true;
             }
-            if (!IsAlive)
-            {
-                return false;
-            } 
+            
             else
             {
                 Console.WriteLine("You lost");
@@ -49,11 +50,14 @@
             }
         }
 
-        public bool GainArrow()
+        public bool Gold_Arrows()
         {
-            if (!IsAlive) return false;
+            if (!IsAlive)
+            {
+                return false;
+            }
 
-            if (Arrows > 0)
+            if (GoldCoins > 0)
             {
                 Arrows++;
                 GoldCoins--;
@@ -71,10 +75,6 @@
         public bool EncounterWumpus()
         {
             Arrows--;
-            if (!IsAlive)
-            {
-                return false;
-            }
             
             if (Arrows < 0)
             {
