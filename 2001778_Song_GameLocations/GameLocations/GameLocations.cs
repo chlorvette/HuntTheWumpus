@@ -15,40 +15,38 @@ namespace GameLocations
         public int StartingLocation { get; set; }
         public bool WumpusIsAwake { get; set; } = false;
         public int TurnsUntilWumpusIsAsleep { get; set; } = 0;
+        public int TotalCaves { get; set; }
         Random random = new Random();
         //all the locations are the insteger numbers refering to the number of the cave which should coordinate to the position of the cave in the list of caves
-        public GameLocations()
+        public GameLocations(int totalCaves)
         {
+            TotalCaves = totalCaves;
         }
         public void MakeHazardLocations()
         {
             //use this method to set the locations of the pits and bats at the start of the game
-            //REPLACE THESE NUMBERS(1,26) WITH THE TOTAL NUMBER OF CAVES IN YOUR GAME
+         
             PitLocations = new int[2];
             BatLocations = new int[2];
             while (true)
             {
-                PitLocations[0] = random.Next(1, 26);
-                PitLocations[1] = random.Next(1, 26);
-                BatLocations[0] = random.Next(1, 26);
-                BatLocations[1] = random.Next(1, 26);
+                PitLocations[0] = random.Next(1, TotalCaves + 1);
+                PitLocations[1] = random.Next(1, TotalCaves + 1);
+                BatLocations[0] = random.Next(1, TotalCaves + 1);
+                BatLocations[1] = random.Next(1, TotalCaves + 1);
                 if (PitLocations[0] != PitLocations[1] && BatLocations[0] != BatLocations[1] && PitLocations[0] != BatLocations[0] && PitLocations[0] != BatLocations[1] && PitLocations[1] != BatLocations[0] && PitLocations[1] != BatLocations[1])
                 {
                     break;
                 }
             }
-
-
-
         }
         public void SetPlayerStartingLocation()
         {
 
-            //REPLACE THESE NUMBERS(1,26) WITH THE TOTAL NUMBER OF CAVES IN YOUR GAME
             //YOU MUST SET THIS AFTER THE HAZARD LOCATIONS HAVE BEEN SET TO AVOID THE PLAYER STARTING IN THE SAME LOCATION AS A HAZARD but before the wumpus location is set to avoid the player starting in the same location as the wumpus
             while (true)
             {
-                int startingLocation = random.Next(1, 26);
+                int startingLocation = random.Next(1, TotalCaves + 1);
                 if (startingLocation != PitLocations[0] && startingLocation != PitLocations[1] && startingLocation != BatLocations[0] && startingLocation != BatLocations[1])
                 {
                     PlayerLocation = startingLocation;
@@ -93,10 +91,9 @@ namespace GameLocations
         {
             //use this after is bat location is true to move the player to a random location
 
-            //REPLACE THESE NUMBERS(1,26) WITH THE TOTAL NUMBER OF CAVES IN YOUR GAME
             while (true)
             {
-                int newLocation = random.Next(1, 26);
+                int newLocation = random.Next(1, TotalCaves + 1);
                 if (newLocation != PlayerLocation)
                 {
                     PlayerLocation = newLocation;
@@ -109,11 +106,10 @@ namespace GameLocations
         {
 
 
-            //REPLACE THESE NUMBERS(1,26) WITH THE TOTAL NUMBER OF CAVES IN YOUR GAME
             //use this methodto set the wumpus location at the start of the game   
             while (true)
             {
-                int newLocation = random.Next(1, 26);
+                int newLocation = random.Next(1, TotalCaves + 1);
                 if (newLocation != PlayerLocation)
                 {
                     WumpusLocation = newLocation;
@@ -124,18 +120,12 @@ namespace GameLocations
         }
         public string GetHazardWarning(List<int> adjacentCaves)
         {
-            //UNFINISHED
-
             //checks if the positions of bats pits or wumpus are equal to the adjacent caves and if they are it adds the appropriate warning to the string that is returned
             //returns a string that tells the player what hazards are nearby
             string warning = "";
             if (adjacentCaves.Contains(WumpusLocation))
             {
                 warning += "You smell a terrible stench. ";
-
-
-
-
             }
             if (adjacentCaves.Contains(PitLocations[0]) || adjacentCaves.Contains(PitLocations[1]))
             {
@@ -160,11 +150,11 @@ namespace GameLocations
             }
             else if (chance <= 6)
             {
-                return $"There is a pit in cave {PitLocations[0]}.";
+                return $"There is a pit in cave {PitLocations[0]} and cave {PitLocations[1]}.";
             }
             else if (chance <= 8)
             {
-                return $"There are bats in cave {BatLocations[0]}.";
+                return $"There are bats in cave {BatLocations[0]} and cave {BatLocations[1]}.";
             }
             else
 
@@ -187,15 +177,13 @@ namespace GameLocations
             {
                 hit = true;
             }
-
-
             return hit;
         }
         public void MoveWumpusAfterArrowMiss(List<int> connectedCaves)
         {
             //moves the wumpus to a new location if the player misses and there is a 75% chance that the wumpus will move
             //wakes wumpus up if it is asleep and sets the turns until it is asleep to 3
-            //REPLACE THESE NUMBERS(1,x) WITH THE TOTAL NUMBER OF CAVES IN YOUR GAME
+            
             int chance = random.Next(1, 5);
             int newLocation = random.Next(0, connectedCaves.Count);
             WumpusIsAwake = true;
@@ -212,25 +200,14 @@ namespace GameLocations
             //make sure to call the reset wumpus asleep timer if it is a trivia win
             //the game control object should call this method 2 -4 times (only do this for a trivia win) after the player wins while calling the GetTunnels to find the available caves for each move to make the wumpus move a random number of times between 2 and 4 caves away from its current location after the player wins a trivia question against the wumpus
             //or if the wumpus is awake call this every turn it is awake for (just do like while(GameLocations.WumpusIsAwake) { MoveWumpusToRandomConnectedRoom(GetTunnels(GameLocations.WumpusLocation)); } in the game control object)
-
-
             int newLocation = random.Next(0, connectedCaves.Count);
             WumpusLocation = connectedCaves[newLocation];
-
-
-
-
         }
         public void ClimbOutOfPit()
         {
             //call this after the player falls into a pit and wins the trivia questions to climb out of the pit
             //moves the player to the starting location after climbing out of a pit
             PlayerLocation = StartingLocation;
-
-
-
-
-
         }
         public void ResetWumpusAsleepTimer()
         {
