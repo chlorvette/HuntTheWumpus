@@ -47,11 +47,7 @@ namespace Player
         }
         public bool Gold_Arrows()
         {
-            if (!_player.IsAlive)
-            {
-                return false;
-            }
-
+            
             if (_player.GoldCoins > 0)
             {
                 _player.Arrows++;

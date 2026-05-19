@@ -14,7 +14,7 @@
             GoldCoins = 0;
             Turns = 0;
             EndingScore = 0;
-
+            
         }
 
         public int Score()
