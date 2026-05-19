@@ -20,20 +20,20 @@ namespace Cerda_Trivia
         private SpriteBatch _spriteBatch;
 
         // Input box variables
-        GumService GumService => GumService.Default;
+        GumService gumService => GumService.Default;
 
-        public Color BackgroundColor = Color.CornflowerBlue;
+        public Color backgroundColor = Color.CornflowerBlue;
 
         // Trivia question variables
-        public string Question;
-        public string Possibleanswers;
-        public int Correctanswer;
+        public string question;
+        public string possibleAnswers;
+        public int correctAnswer;
 
         //Main question font and position
-        private SpriteFont MainQuestion;
+        private SpriteFont mainQuestion;
         private SpriteFont answerList;
 
-        public Color MainQuestionColor = Color.White;
+        public Color mainQuestionColor = Color.White;
 
         public Game1()
         {
@@ -46,15 +46,15 @@ namespace Cerda_Trivia
         protected override void Initialize()
         {
             // Initialize Gum
-            GumService.Initialize(this);
+            gumService.Initialize(this);
 
             base.Initialize();
 
             var manager = new TriviaManager();
             var first = manager.AllQuestionsInfo; // (string Question, string[] Answers, int CorrectIndex)
-            Question = first.Question;
-            Possibleanswers = string.Join("\n", first.Answers ?? new string[0]);
-            Correctanswer = first.CorrectIndex;
+            question = first.Question;
+            possibleAnswers = string.Join("\n", first.Answers ?? new string[0]);
+            correctAnswer = first.CorrectIndex;
             OptionButtons(first.Answers);
         }
 
@@ -67,46 +67,44 @@ namespace Cerda_Trivia
             mainPanel.Anchor(Anchor.Center);
 
             // Option buttons\
-            var Option1 = new Button();
-            Option1.Text = options != null && options.Length > 0 ? options[0] : "Option 1";
-            mainPanel.AddChild(Option1);
+            var option1 = new Button();
+            option1.Text = options != null && options.Length > 0 ? options[0] : "Option 1";
+            mainPanel.AddChild(option1);
 
-            var Option2 = new Button();
-            Option2.Text = options != null && options.Length > 1 ? options[1] : "Option 2";
-            mainPanel.AddChild(Option2);
+            var option2 = new Button();
+            option2.Text = options != null && options.Length > 1 ? options[1] : "Option 2";
+            mainPanel.AddChild(option2);    
+            var option3 = new Button();
+            option3.Text = options != null && options.Length > 2 ? options[2] : "Option 3";
+            mainPanel.AddChild(option3);
 
-            var Option3 = new Button();
-            Option3.Text = options != null && options.Length > 2 ? options[2] : "Option 3";
-            mainPanel.AddChild(Option3);
-
-            var Option4 = new Button();
-            Option4.Text = options != null && options.Length > 3 ? options[3] : "Option 4";
-            mainPanel.AddChild(Option4);
-
-            if (Option1 != null && Option2 != null || Option3 != null || Option4 != null)
+            var option4 = new Button();
+            option4.Text = options != null && options.Length > 3 ? options[3] : "Option 4";
+            mainPanel.AddChild(option4);
+            if (option1 != null && option2 != null || option3 != null || option4 != null)
             {
-                Option1.Click += (s, e) => CheckAnswer(1, Option1, Option2, Option3, Option4);
-                Option2.Click += (s, e) => CheckAnswer(2, Option2, Option1, Option3, Option4);
-                Option3.Click += (s, e) => CheckAnswer(3, Option3, Option1, Option2, Option4);
-                Option4.Click += (s, e) => CheckAnswer(4, Option4, Option1, Option2, Option3);
+                option1.Click += (s, e) => CheckAnswer(1, option1, option2, option3, option4);
+                option2.Click += (s, e) => CheckAnswer(2, option2, option1, option3, option4);
+                option3.Click += (s, e) => CheckAnswer(3, option3, option1, option2, option4);
+                option4.Click += (s, e) => CheckAnswer(4, option4, option1, option2, option3);
             }
         }
 
-        private async void CheckAnswer(int selectedOption, Button Option1, Button Option2, Button Option3, Button Option4)
+        private async void CheckAnswer(int selectedOption, Button option1, Button option2, Button option3, Button option4)
         {
-            if (selectedOption == Correctanswer) // +1 because options are 1-indexed
+            if (selectedOption == correctAnswer) // +1 because options are 1-indexed
             {
                 // Correct answer logic
-                MainQuestionColor = Color.Green;
+                mainQuestionColor = Color.Green;
             }
             else
             {
                 // Incorrect answer logic
-                MainQuestionColor = Color.Red;
-                Option1.IsEnabled = false;
-                Option2.IsEnabled = false;
-                Option3.IsEnabled = false;
-                Option4.IsEnabled = false;
+                mainQuestionColor = Color.Red;
+                option1.IsEnabled = false;
+                option2.IsEnabled = false;
+                option3.IsEnabled = false;
+                option4.IsEnabled = false;
                 await Task.Delay(1000); // Wait for 1 second before closin the program
                 base.Exit();
 
@@ -118,7 +116,7 @@ namespace Cerda_Trivia
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //load the main question font and set its position
-            MainQuestion = Content.Load<SpriteFont>("Question");
+            mainQuestion = Content.Load<SpriteFont>("Question");
 
             answerList = Content.Load<SpriteFont>("Possible Answers");
 
@@ -130,26 +128,26 @@ namespace Cerda_Trivia
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            GumService.Update(gameTime);
+            gumService.Update(gameTime);
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(backgroundColor);
 
-            Vector2 questionSize = MainQuestion.MeasureString(Question);
+            Vector2 questionSize = mainQuestion.MeasureString(question);
 
             Vector2 mainQuestionPos = new Vector2(GraphicsDevice.Viewport.Width / 2, 100) - questionSize / 2;
 
             _spriteBatch.Begin();
 
-            _spriteBatch.DrawString(MainQuestion, Question, mainQuestionPos, MainQuestionColor);
+            _spriteBatch.DrawString(mainQuestion, question, mainQuestionPos, mainQuestionColor);
 
             _spriteBatch.End();
 
-           GumService.Draw();
+            gumService.Draw();
 
             base.Draw(gameTime);
         }

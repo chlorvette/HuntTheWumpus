@@ -8,26 +8,71 @@ namespace Player
 {
     public class PlayerManager
     {
-        public int Arrows { get; set; }
-        public int GoldCoins { get; set; }
-        public int Turns { get; set; }
-        public int EndingScore { get; set; }
+        private Player _player;
+        
 
-        public PlayerManager()
+        public PlayerManager(Player player)
         {
-            Arrows = 3;
-            GoldCoins = 0;
-            Turns = 0;
-            EndingScore = 0;    
+            _player = player;
 
         }
-        public PlayerManager(int arrows, int goldCoins, int turns, int endingScore)
+        public void ShootArrow()
         {
-            Arrows = arrows;
-            GoldCoins = goldCoins;
-            Turns = turns;
-            EndingScore = endingScore;
+            if (!_player.IsAlive) return;
+
+            if (_player.Arrows > 0)
+            {
+                _player.Arrows--;
+            }
+            else
+            {
+                Console.WriteLine("You lost");
+                _player.IsAlive = false;
+            }
+            _player.Score();
+        }
+        public bool EncounterWumpus()
+        {
+            _player.Arrows--;
+
+            if (_player.Arrows < 0)
+            {
+                Console.WriteLine("You lost");
+                _player.IsAlive = false;
+                _player.Score();
+                return false;
+            }
+            return true;
+        }
+        public bool Gold_Arrows()
+        {
+            if (!_player.IsAlive)
+            {
+                return false;
+            }
+
+            if (_player.GoldCoins > 0)
+            {
+                _player.Arrows++;
+                _player.GoldCoins--;
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("You lost");
+                _player.IsAlive = false;
+                _player.Score();
+                return false;
+            }
         }
 
+        public void TakeTurn()
+        {
+            if (!_player.IsAlive) return;
+            _player.Turns++;
+            _player.Score();
+        }
     }
 }
+    
+

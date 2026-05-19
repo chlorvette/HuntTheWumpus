@@ -5,7 +5,7 @@ namespace Cerda_Trivia
 {
     internal class TriviaManager
     {
-        public (string Question, string[] Answers, int CorrectIndex) AllQuestionsInfo;
+        public (string Question, string[] Answers, int CorrectIndex) allQuestionsInfo;
 
         public List<string> triviaQuestions = new List<string>
         {
@@ -91,7 +91,7 @@ namespace Cerda_Trivia
         {
             var rnd = new Random();
             int questionIndex = rnd.Next(triviaQuestions.Count);
-            AllQuestionsInfo = (triviaQuestions[questionIndex], possibleAnswers[questionIndex], correctAnswers[questionIndex]);
+            allQuestionsInfo = (triviaQuestions[questionIndex], possibleAnswers[questionIndex], correctAnswers[questionIndex]);
         }
     }
 }
