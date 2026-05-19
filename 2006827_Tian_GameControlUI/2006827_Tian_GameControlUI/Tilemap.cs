@@ -21,6 +21,8 @@ namespace GameControlUI
         private string[,] templateTilemap;
         private Vector2 scale;
         private string tilesetImagePath;
+        private int tilemapWidth;
+        private int tilemapHeight;
 
         public Tilemap(ContentManager content, string tilesetImagePath, string tilemapTemplatePath, int tileDimensions, (int, int) tilemapDimensions, Vector2 scale, string tilesetKeyPath, int choicesPerType, int totalTypes)
         {
@@ -29,6 +31,8 @@ namespace GameControlUI
             this.tileDimensions = tileDimensions;
             int tilemapRows = tilemapDimensions.Item1;
             int tilemapColumns = tilemapDimensions.Item2;
+            this.tilemapWidth = tilemapColumns * tileDimensions * (int)scale.X;
+            this.tilemapHeight = tilemapRows * tileDimensions * (int)scale.Y;
             templateTilemap = new string[tilemapRows, tilemapColumns];
             coordinateTilemap = new (int, int)[tilemapRows, tilemapColumns];
 
@@ -144,6 +148,18 @@ namespace GameControlUI
                     batch.Draw(tileset, brushPos, sourceRectangle, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
                 }
             }
+        }
+
+        public Rectangle[] getCollisionRect()
+        {
+            Rectangle[] rectangles = new Rectangle[4];
+
+            rectangles[0] = new Rectangle(0, 0, tilemapWidth, tileDimensions); // top
+            rectangles[1] = new Rectangle(0, 0, tileDimensions, tilemapHeight); // left
+            rectangles[2] = new Rectangle((tilemapWidth - tileDimensions), 0, tileDimensions * (int)scale.X, tilemapHeight); // right
+            rectangles[3] = new Rectangle(0, (tilemapHeight - tileDimensions), tilemapWidth, tileDimensions * (int)scale.X); // bottom
+
+            return rectangles;
         }
     }
 }
