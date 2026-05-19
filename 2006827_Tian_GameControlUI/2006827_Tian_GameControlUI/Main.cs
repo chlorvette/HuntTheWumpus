@@ -78,6 +78,19 @@ namespace _2006827_Tian_GameControlUI
             characterPos = new Vector2((viewport.Width / 2) - (playerTexture.FrameWidth / 2), (viewport.Height / 2) - (playerTexture.FrameHeight / 2));
         }
 
+        private bool checkForWallCollision(Vector2 newCharacterPos, AnimatedTexture playerTexture, Rectangle[] collisionRectangles)
+        {
+            Rectangle playerRectangle = new Rectangle((int)newCharacterPos.X, (int)newCharacterPos.Y, playerTexture.FrameWidth, playerTexture.FrameHeight);
+            foreach (Rectangle rectangle in collisionRectangles)
+            {
+                if (playerRectangle.Left <= rectangle.Right && playerRectangle.Right >= rectangle.Left && playerRectangle.Top <= rectangle.Bottom && playerRectangle.Bottom >= rectangle.Top)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         protected override void Update(GameTime gameTime)
         {
             // keyboard input => player movement
@@ -88,42 +101,36 @@ namespace _2006827_Tian_GameControlUI
             }
 
             isMoving = false;
+            Vector2 newCharacterPosition = characterPos;
             if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
-                if (characterPos.Y > -15)
-                {
-                    characterPos.Y -= moveSpeed;
-                }
+                newCharacterPosition.Y -= moveSpeed;
                 isMoving = true;
             }
 
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
-                if (characterPos.X > -10)
-                {
-                    characterPos.X -= moveSpeed;
-                }
+                newCharacterPosition.X -= moveSpeed;
                 isMoving = true;
                 movingLeft = true;
             }
 
             if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
             {
-                if ((characterPos.Y + playerTexture.FrameHeight + moveSpeed) < viewport.Height)
-                {
-                    characterPos.Y += moveSpeed;
-                }
+                newCharacterPosition.Y += moveSpeed;
                 isMoving = true;
             }
 
             if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
             {
-                if ((characterPos.X + playerTexture.FrameWidth + moveSpeed - 20) < viewport.Width)
-                {
-                    characterPos.X += moveSpeed;
-                }
+                newCharacterPosition.X += moveSpeed;
                 isMoving = true;
                 movingLeft = false;
+            }
+
+            if (!checkForWallCollision(newCharacterPosition, playerTexture, tilemapLayerOne.getCollisionRect()))
+            {
+                characterPos = newCharacterPosition;
             }
 
             if (isMoving)

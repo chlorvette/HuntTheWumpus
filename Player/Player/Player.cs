@@ -6,89 +6,20 @@
         public int GoldCoins { get; set; }
         public int Turns { get; set; }
         public int EndingScore { get; set; }
-        public bool IsAlive { get; set; } = true; 
+        public bool IsAlive { get; set; } = true;
 
         public Player()
         {
-            PlayerManager playerManager = new PlayerManager();
-            Arrows = playerManager.Arrows;
-            GoldCoins = playerManager.GoldCoins;
-            Turns = playerManager.Turns;
-            EndingScore = playerManager.EndingScore;
-        }
+            Arrows = 3;
+            GoldCoins = 0;
+            Turns = 0;
+            EndingScore = 0;
 
-        public int TakeTurn()
-        {
-            if (!IsAlive)
-            {
-                Console.WriteLine("You lost");
-                Score();
-                return Turns;
-            }
-            Turns++;
-            return Turns;
-        }
-
-        public bool ShootArrow()
-        {
-            if (!IsAlive)
-            {
-                return false;
-            }
-            if (Arrows > 0)
-            {
-                Arrows--;
-                return true;
-            }
-            
-            else
-            {
-                Console.WriteLine("You lost");
-                IsAlive = false;
-                Score();
-                return false;
-            }
-        }
-
-        public bool Gold_Arrows()
-        {
-            if (!IsAlive)
-            {
-                return false;
-            }
-
-            if (GoldCoins > 0)
-            {
-                Arrows++;
-                GoldCoins--;
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("You lost");
-                IsAlive = false;
-                Score();
-                return false;
-            }
-        }
-
-        public bool EncounterWumpus()
-        {
-            Arrows--;
-            
-            if (Arrows < 0)
-            {
-                Console.WriteLine("You lost");
-                IsAlive = false;
-                Score();
-                return false;
-            }
-            return true;
         }
 
         public int Score()
         {
-            // Ensures score never drops below 0
+            // Score never drops below 0
             EndingScore = Math.Max(0, (GoldCoins * 10) - (Turns * 1));
             return EndingScore;
         }
