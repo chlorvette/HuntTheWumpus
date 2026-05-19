@@ -43,15 +43,23 @@ namespace Cerda_Trivia
 
         }
 
+        public void showTrviaQuestion()
+        { 
+        
+            Initialize();
+            LoadContent();
+            Update(new GameTime());
+            Draw(new GameTime());
+
+        }
         protected override void Initialize()
         {
             // Initialize Gum
             gumService.Initialize(this);
-
             base.Initialize();
 
             var manager = new TriviaManager();
-            var first = manager.AllQuestionsInfo; // (string Question, string[] Answers, int CorrectIndex)
+            var first = manager.allQuestionsInfo; // (string Question, string[] Answers, int CorrectIndex)
             question = first.Question;
             possibleAnswers = string.Join("\n", first.Answers ?? new string[0]);
             correctAnswer = first.CorrectIndex;
@@ -96,6 +104,12 @@ namespace Cerda_Trivia
             {
                 // Correct answer logic
                 mainQuestionColor = Color.Green;
+                option1.IsEnabled = false;
+                option2.IsEnabled = false;
+                option3.IsEnabled = false;
+                option4.IsEnabled = false;
+                await Task.Delay(1000); // Wait for 1 second before closin the program
+                base.Exit();
             }
             else
             {
