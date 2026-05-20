@@ -23,10 +23,11 @@ namespace Player
             if (_player.Arrows > 0)
             {
                 _player.Arrows--;
+                Console.WriteLine("You shot an arrow");
             }
             else
             {
-                Console.WriteLine("You lost");
+                Console.WriteLine("You have no arrows left. The Wumpus eats you and you die");
                 _player.IsAlive = false;
             }
             _player.Score();
@@ -46,11 +47,7 @@ namespace Player
         }
         public bool Gold_Arrows()
         {
-            if (!_player.IsAlive)
-            {
-                return false;
-            }
-
+            
             if (_player.GoldCoins > 0)
             {
                 _player.Arrows++;

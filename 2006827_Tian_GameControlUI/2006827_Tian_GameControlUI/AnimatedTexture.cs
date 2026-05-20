@@ -18,6 +18,7 @@ namespace GameControlUI
 {
     public class AnimatedTexture
     {
+        // texture config
         private int frameCount;
         private int columns;
         private int rows;
