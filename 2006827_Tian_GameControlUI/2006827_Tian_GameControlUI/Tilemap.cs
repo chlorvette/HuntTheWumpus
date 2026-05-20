@@ -150,7 +150,7 @@ namespace GameControlUI
             }
         }
 
-        public Rectangle[] getCollisionRect()
+        public Rectangle[] getWallCollisionRect()
         {
             Rectangle[] rectangles = new Rectangle[4];
 

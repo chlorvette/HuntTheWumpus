@@ -128,7 +128,7 @@ namespace _2006827_Tian_GameControlUI
                 movingLeft = false;
             }
 
-            if (!checkForWallCollision(newCharacterPosition, playerTexture, tilemapLayerOne.getCollisionRect()))
+            if (!checkForWallCollision(newCharacterPosition, playerTexture, tilemapLayerOne.getWallCollisionRect()))
             {
                 characterPos = newCharacterPosition;
             }
