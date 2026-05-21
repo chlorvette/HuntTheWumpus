@@ -62,7 +62,7 @@ namespace CaveGeneration
         {
             return roomList[roomNumber - 1];
             }
-        public List<Room> GetAdjacentRoomsForRoomNumber(int roomNumber) 
+        public (List<Room> rooms, List<int> roomNumbers) GetAdjacentRoomsForRoomNumber(int roomNumber) 
         {
             var room = GetRoom(roomNumber);
             List<Room> adjacentRooms = room.AdjacentRooms;

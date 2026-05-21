@@ -31,6 +31,9 @@ namespace GameControlUI
             ("RDT", "RDB")
         }; // config door pair keys
 
+        public string[] tileTypeKeys;
+        public (int, int)[,] tileTypeCoordinateValues;
+
         public Tilemap(ContentManager content, string tilesetImagePath, string tilemapTemplatePath, int tileDimensions, (int, int) tilemapDimensions, Vector2 scale, string tilesetKeyPath, int choicesPerType, int totalTypes)
         {
             this.tilesetImagePath = tilesetImagePath;
@@ -60,8 +63,8 @@ namespace GameControlUI
                 }
             }
 
-            string[] keys = new string[totalTypes];
-            (int, int)[,] values = new (int, int)[totalTypes, choicesPerType];
+            tileTypeKeys = new string[totalTypes];
+            tileTypeCoordinateValues = new (int, int)[totalTypes, choicesPerType];
 
             currentRow = 0;
             using (StreamReader sr = new StreamReader(tilesetKeyPath))
@@ -71,13 +74,13 @@ namespace GameControlUI
                 {
                     string[] splitString = line.Split("(", 2);
                     string key = splitString[0];
-                    keys[currentRow] = key;
+                    tileTypeKeys[currentRow] = key;
                     string valuesString = "(" + splitString[1];
                     string[] valuesCoordinates = Regex.Split(valuesString, @"\((\d+,\d+)\)");
                     for (int valueIndex = 1; valueIndex < valuesCoordinates.Length; valueIndex += 2)
                     {
                         MatchCollection coordinateIntegers = Regex.Matches(valuesCoordinates[valueIndex], @"\d+");
-                        if (coordinateIntegers.Count == 2) values[currentRow, (valueIndex - 1) / 2] = (int.Parse(coordinateIntegers[0].Value), int.Parse(coordinateIntegers[1].Value));
+                        if (coordinateIntegers.Count == 2) tileTypeCoordinateValues[currentRow, (valueIndex - 1) / 2] = (int.Parse(coordinateIntegers[0].Value), int.Parse(coordinateIntegers[1].Value));
                     }
                 }
             }
@@ -93,7 +96,7 @@ namespace GameControlUI
                         coordinateTilemap[currentRow, columnIndex] = (tilemapRows + 1, tilemapColumns + 1);
                     } else
                     {
-                        coordinateTilemap[currentRow, columnIndex] = values[Array.IndexOf(keys, tileType), random.Next(choicesPerType)];
+                        coordinateTilemap[currentRow, columnIndex] = tileTypeCoordinateValues[Array.IndexOf(tileTypeKeys, tileType), random.Next(choicesPerType)];
                     }
                 }
             }

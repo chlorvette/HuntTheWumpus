@@ -28,6 +28,7 @@ namespace _2006827_Tian_GameControlUI
         private const float playerRotation = 0;
         private Vector2 playerScale = new Vector2(1f, 1f);
         private const float playerDepth = 0.5f;
+        private const string playerAsset = "ArcherSheet";
 
         // tilemap configuration
         private Vector2 tileScale = new Vector2(2f, 2f);
@@ -63,6 +64,7 @@ namespace _2006827_Tian_GameControlUI
             cave = new Cave(tunnelsPerRoom, caveHeight, caveWidth);
             gameLocation = new GameLocation(cave.roomList.Count);
             currentRoom = cave.GetRoom(gameLocation.PlayerLocation);
+            string warning = gameLocation.GetHazardWarning(cave.GetAdjacentRoomsForRoomNumber(gameLocation.PlayerLocation).roomNumbers);
         }
 
         protected override void Initialize()
@@ -89,7 +91,7 @@ namespace _2006827_Tian_GameControlUI
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            playerTexture.Load(Content, "ArcherSheet", frames, columns, rows, framesPerSec);
+            playerTexture.Load(Content, playerAsset, frames, columns, rows, framesPerSec);
             playerTexture.Row = 0; // play first row (idling animation)
 
             tilemapLayerZero.Load(Content);
@@ -133,6 +135,21 @@ namespace _2006827_Tian_GameControlUI
                 case "R": return "L";
                 case "L": return "R";
                 default: return direction;
+            }
+        }
+
+        private (string, string) getRelativeDoorPositions(string entranceDirection)
+        {
+            switch (entranceDirection)
+            {
+                case "B":
+                case "F":
+                    return ("L", "R");
+                case "L":
+                case "R":
+                    return ("T", "B");
+                default:
+                    return ("", "");
             }
         }
 
@@ -227,12 +244,8 @@ namespace _2006827_Tian_GameControlUI
                         currentRoom = nextRoom;
                         gameLocation.PlayerLocation = currentRoom.RoomNumber;
                         gameLocation.MovePlayer(currentRoom.RoomNumber);
-                        List<int> adjRoomNumbers = new List<int>();
-                        foreach (Room room in currentRoom.RoomTunnels)
-                        {
-                            adjRoomNumbers.Add(room.RoomNumber);
-                        }
-                        string warnings = gameLocation.GetHazardWarning(adjRoomNumbers);
+                        gameLocation.OneTurnPasses();
+                        string warnings = gameLocation.GetHazardWarning(cave.GetAdjacentRoomsForRoomNumber(gameLocation.PlayerLocation).roomNumbers);
                         if (warnings != "") System.Diagnostics.Debug.WriteLine(warnings);
                         (bool[] hazardsInRoom, string[] hazardNames) = gameLocation.CheckHazards();
                         for (int hazardIndex = 0; hazardIndex < hazardsInRoom.Length; hazardIndex++)
@@ -240,10 +253,18 @@ namespace _2006827_Tian_GameControlUI
                             if (hazardsInRoom[hazardIndex])
                             {
                                 System.Diagnostics.Debug.WriteLine(hazardNames[hazardIndex]);
+                                if (hazardNames[hazardIndex] == "Pit")
+                                {
+                                    // trigger trivia, if correct, ClimbOutOfPit() else game over
+                                }
+                                if (hazardNames[hazardIndex] == "Wumpus")
+                                {
+                                    // um idk whatever u do when encounter the wumpus ??
+                                }
                                 if (hazardNames[hazardIndex] == "Bat")
                                 {
                                     gameLocation.MovePlayerToRandomLocation();
-                                }
+                                } 
                             }
                         }
                         System.Diagnostics.Debug.WriteLine("entered room #" + gameLocation.PlayerLocation.ToString());
