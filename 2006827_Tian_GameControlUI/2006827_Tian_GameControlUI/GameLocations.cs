@@ -21,6 +21,9 @@ namespace GameLocations
         public GameLocations(int totalCaves)
         {
             TotalCaves = totalCaves;
+            MakeHazardLocations();
+            SetPlayerStartingLocation();
+            SetWumpusLocation();
         }
         public void MakeHazardLocations()
         {
