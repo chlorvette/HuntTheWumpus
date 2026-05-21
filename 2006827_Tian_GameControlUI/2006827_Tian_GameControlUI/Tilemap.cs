@@ -17,12 +17,22 @@ namespace GameControlUI
     {
         private Texture2D tileset;
         private int tileDimensions;
-        private (int, int)[,] coordinateTilemap;
-        private string[,] templateTilemap;
+        private (int, int)[,] coordinateTilemap; // tilemap made up of the coordinates on the tileset that correspond to the correct tile that goes there
+        private string[,] templateTilemap; // tilemap made up of the keys for each tile type formatted in tilemap format (i.e. A,B,C\nA,B,C)
         private Vector2 scale;
         private string tilesetImagePath;
         private int tilemapWidth;
         private int tilemapHeight;
+        private (string, string)[] doorPairs =
+        {
+            ("BDL", "BDR"),
+            ("FDL", "FDR"),
+            ("LDT", "LDB"),
+            ("RDT", "RDB")
+        }; // config door pair keys
+
+        public string[] tileTypeKeys;
+        public (int, int)[,] tileTypeCoordinateValues;
 
         public Tilemap(ContentManager content, string tilesetImagePath, string tilemapTemplatePath, int tileDimensions, (int, int) tilemapDimensions, Vector2 scale, string tilesetKeyPath, int choicesPerType, int totalTypes)
         {
@@ -53,8 +63,8 @@ namespace GameControlUI
                 }
             }
 
-            string[] keys = new string[totalTypes];
-            (int, int)[,] values = new (int, int)[totalTypes, choicesPerType];
+            tileTypeKeys = new string[totalTypes];
+            tileTypeCoordinateValues = new (int, int)[totalTypes, choicesPerType];
 
             currentRow = 0;
             using (StreamReader sr = new StreamReader(tilesetKeyPath))
@@ -64,13 +74,13 @@ namespace GameControlUI
                 {
                     string[] splitString = line.Split("(", 2);
                     string key = splitString[0];
-                    keys[currentRow] = key;
+                    tileTypeKeys[currentRow] = key;
                     string valuesString = "(" + splitString[1];
                     string[] valuesCoordinates = Regex.Split(valuesString, @"\((\d+,\d+)\)");
                     for (int valueIndex = 1; valueIndex < valuesCoordinates.Length; valueIndex += 2)
                     {
                         MatchCollection coordinateIntegers = Regex.Matches(valuesCoordinates[valueIndex], @"\d+");
-                        if (coordinateIntegers.Count == 2) values[currentRow, (valueIndex - 1) / 2] = (int.Parse(coordinateIntegers[0].Value), int.Parse(coordinateIntegers[1].Value));
+                        if (coordinateIntegers.Count == 2) tileTypeCoordinateValues[currentRow, (valueIndex - 1) / 2] = (int.Parse(coordinateIntegers[0].Value), int.Parse(coordinateIntegers[1].Value));
                     }
                 }
             }
@@ -86,9 +96,8 @@ namespace GameControlUI
                         coordinateTilemap[currentRow, columnIndex] = (tilemapRows + 1, tilemapColumns + 1);
                     } else
                     {
-                        coordinateTilemap[currentRow, columnIndex] = values[Array.IndexOf(keys, tileType), random.Next(choicesPerType)];
+                        coordinateTilemap[currentRow, columnIndex] = tileTypeCoordinateValues[Array.IndexOf(tileTypeKeys, tileType), random.Next(choicesPerType)];
                     }
-
                 }
             }
         }
@@ -150,7 +159,7 @@ namespace GameControlUI
             }
         }
 
-        public Rectangle[] getCollisionRect()
+        public Rectangle[] getWallCollisionRect()
         {
             Rectangle[] rectangles = new Rectangle[4];
 
@@ -160,6 +169,52 @@ namespace GameControlUI
             rectangles[3] = new Rectangle(0, (tilemapHeight - tileDimensions), tilemapWidth, tileDimensions * (int)scale.X); // bottom
 
             return rectangles;
+        }
+
+        public (Rectangle[] rectangleList, string[] doorDirections) getDoorCollisionRect()
+        {
+            Rectangle[] rectangles = new Rectangle[doorPairs.Length];
+            string[] doorDirections = new string[doorPairs.Length];
+            ((int, int), (int, int))[] doorPairsCoordinates = new ((int, int), (int, int))[doorPairs.Length];
+            for (int currentRow = 0; currentRow < templateTilemap.GetLength(0); currentRow++)
+            {
+                for (int currentColumn = 0; currentColumn < templateTilemap.GetLength(1); currentColumn++)
+                {
+                    string tileType = templateTilemap[currentRow, currentColumn];
+                    for (int doorPairIndex = 0; doorPairIndex < doorPairs.Length; doorPairIndex++)
+                    {
+                        if (tileType == doorPairs[doorPairIndex].Item1)
+                        {
+                            doorPairsCoordinates[doorPairIndex].Item1 = (currentRow, currentColumn);
+                            doorDirections[doorPairIndex] = tileType.Substring(0, 1);
+                            
+                        } else if (tileType == doorPairs[doorPairIndex].Item2)
+                        {
+                            doorPairsCoordinates[doorPairIndex].Item2 = (currentRow, currentColumn);
+                        }
+                    }
+                }
+            }
+
+            for (int currentPairIndex = 0; currentPairIndex < doorPairs.Length; currentPairIndex++)
+            {
+                int xPosPixels;
+                int yPosPixels;
+                string posRelative = doorPairs[currentPairIndex].Item1.Substring(doorPairs[currentPairIndex].Item1.Length - 2);
+                if (posRelative == "L" || posRelative == "T")
+                {
+                    xPosPixels = doorPairsCoordinates[currentPairIndex].Item1.Item2 * tileDimensions * (int)scale.X; 
+                    yPosPixels = doorPairsCoordinates[currentPairIndex].Item1.Item1 * tileDimensions * (int)scale.Y;
+                } else
+                {
+                    xPosPixels = doorPairsCoordinates[currentPairIndex].Item1.Item2 * tileDimensions * (int)scale.X;
+                    yPosPixels = doorPairsCoordinates[currentPairIndex].Item1.Item1 * tileDimensions * (int)scale.Y; 
+                }
+
+                rectangles[currentPairIndex] = new Rectangle(xPosPixels, yPosPixels, tileDimensions * 2 * (int)scale.X, tileDimensions * (int)scale.Y);
+            }
+
+            return (rectangles, doorDirections);
         }
     }
 }
