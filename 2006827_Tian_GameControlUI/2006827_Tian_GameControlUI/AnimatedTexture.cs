@@ -5,14 +5,6 @@ using Vector2 = Microsoft.Xna.Framework.Vector2;
 using SpriteEffects = Microsoft.Xna.Framework.Graphics.SpriteEffects;
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameControlUI
 {

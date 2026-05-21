@@ -2,19 +2,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Diagnostics;
-using System.Drawing.Text;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Xml.Linq;
 using Cave = CaveGeneration.Cave;
 using Room = CaveGeneration.Room;
 using GameLocation = GameLocations.GameLocations;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Color = Microsoft.Xna.Framework.Color;
-using System.Collections.Generic;
-using System.Drawing;
 
 namespace _2006827_Tian_GameControlUI
 {
