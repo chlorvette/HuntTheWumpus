@@ -8,67 +8,66 @@ namespace Player
 {
     public class PlayerManager
     {
-        private Player _player;
-        
+        //private Player _player;
+       
+        //public PlayerManager(Player player)
+        //{
+        //    _player = player;
 
-        public PlayerManager(Player player)
-        {
-            _player = player;
+        //}
+        //public void ShootArrow()
+        //{
+        //    if (!_player.IsAlive) return;
 
-        }
-        public void ShootArrow()
-        {
-            if (!_player.IsAlive) return;
+        //    if (_player.Arrows > 0)
+        //    {
+        //        _player.Arrows--;
+        //        Console.WriteLine("You shot an arrow");
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine("You have no arrows left. The Wumpus eats you and you die");
+        //        _player.IsAlive = false;
+        //    }
+        //    _player.Score();
+        //}
+        //public bool EncounterWumpus()
+        //{
+        //    _player.Arrows--;
 
-            if (_player.Arrows > 0)
-            {
-                _player.Arrows--;
-                Console.WriteLine("You shot an arrow");
-            }
-            else
-            {
-                Console.WriteLine("You have no arrows left. The Wumpus eats you and you die");
-                _player.IsAlive = false;
-            }
-            _player.Score();
-        }
-        public bool EncounterWumpus()
-        {
-            _player.Arrows--;
-
-            if (_player.Arrows < 0)
-            {
-                Console.WriteLine("You lost");
-                _player.IsAlive = false;
-                _player.Score();
-                return false;
-            }
-            return true;
-        }
-        public bool Gold_Arrows()
-        {
+        //    if (_player.Arrows < 0)
+        //    {
+        //        Console.WriteLine("You have no arrows left. The Wumpus eats you and you die");
+        //        _player.IsAlive = false;
+        //        _player.Score();
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //public bool Gold_Arrows()
+        //{
             
-            if (_player.GoldCoins > 0)
-            {
-                _player.Arrows++;
-                _player.GoldCoins--;
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("You lost");
-                _player.IsAlive = false;
-                _player.Score();
-                return false;
-            }
-        }
+        //    if (_player.GoldCoins > 0)
+        //    {
+        //        _player.Arrows++;
+        //        _player.GoldCoins--;
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine("You lost");
+        //        _player.IsAlive = false;
+        //        _player.Score();
+        //        return false;
+        //    }
+        //}
 
-        public void TakeTurn()
-        {
-            if (!_player.IsAlive) return;
-            _player.Turns++;
-            _player.Score();
-        }
+        //public void TakeTurn()
+        //{
+        //    if (!_player.IsAlive) return;
+        //    _player.Turns++;
+        //    _player.Score();
+        //}
     }
 }
     
