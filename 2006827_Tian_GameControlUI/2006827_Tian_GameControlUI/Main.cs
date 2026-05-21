@@ -5,7 +5,11 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
 using System.Drawing.Text;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Xml.Linq;
+using Cave = CaveGeneration.Cave;
+using Room = CaveGeneration.Room;
 
 namespace _2006827_Tian_GameControlUI
 {
@@ -26,13 +30,21 @@ namespace _2006827_Tian_GameControlUI
         // tilemap configuration
         private Vector2 tileScale = new Vector2(2f, 2f);
         private int tilesetChoicesPerType = 12;
-        private int tilesetTotalTypes = 13;
+        private int tilesetTotalTypes = 15;
         private int tilesetTileDimensions = 16;
         private int tilemapWidthTiles = 25;
         private int tilemapHeightTiles = 15;
         private string tilesetKeyPath = @"..\..\..\Content\map\tilesetKey.txt";
         private string tilesetImageName = "map/Dungeon_Tileset";
         private string tilemapsLocation = @"..\..\..\Content\map\";
+
+        private Rectangle[] doorRectangles;
+        private string[] doorDirections;
+
+        private Cave cave = new Cave(3, 30, 6);
+        private Room currentRoom;
+        private int currentRoomNumber = 1;
+        private bool movingToNextRoom = false;
 
         public Main()
         {
@@ -42,6 +54,8 @@ namespace _2006827_Tian_GameControlUI
             playerTexture = new AnimatedTexture(Vector2.Zero, playerRotation, playerScale, playerDepth);
             tilemapLayerZero = new Tilemap(Content, tilesetImageName, tilemapsLocation+ "tilemapLayer0Template.txt", tilesetTileDimensions, (tilemapHeightTiles, tilemapWidthTiles), tileScale, tilesetKeyPath, tilesetChoicesPerType, tilesetTotalTypes);
             tilemapLayerOne = new Tilemap(Content, tilesetImageName, tilemapsLocation + "tilemapLayer1Template.txt", tilesetTileDimensions, (tilemapHeightTiles, tilemapWidthTiles), tileScale, tilesetKeyPath, tilesetChoicesPerType, tilesetTotalTypes);
+            (doorRectangles, doorDirections) = tilemapLayerOne.getDoorCollisionRect();
+            currentRoom = cave.GetRoom(currentRoomNumber);
         }
 
         protected override void Initialize()
@@ -78,17 +92,77 @@ namespace _2006827_Tian_GameControlUI
             characterPos = new Vector2((viewport.Width / 2) - (playerTexture.FrameWidth / 2), (viewport.Height / 2) - (playerTexture.FrameHeight / 2));
         }
 
-        private bool checkForWallCollision(Vector2 newCharacterPos, AnimatedTexture playerTexture, Rectangle[] collisionRectangles)
+        private (bool collided, Rectangle rect, int index) checkForCollision(Vector2 newCharacterPos, AnimatedTexture playerTexture, Rectangle[] collisionRectangles)
         {
             Rectangle playerRectangle = new Rectangle((int)newCharacterPos.X, (int)newCharacterPos.Y, playerTexture.FrameWidth, playerTexture.FrameHeight);
-            foreach (Rectangle rectangle in collisionRectangles)
+            for (int i = 0; i < collisionRectangles.Length; i++)
             {
-                if (playerRectangle.Left <= rectangle.Right && playerRectangle.Right >= rectangle.Left && playerRectangle.Top <= rectangle.Bottom && playerRectangle.Bottom >= rectangle.Top)
+                if (playerRectangle.Intersects(collisionRectangles[i]))
                 {
-                    return true;
+                    return (true, collisionRectangles[i], i);
                 }
             }
-            return false;
+            return (false, new Rectangle(0, 0, 0, 0), -1);
+        }
+
+        private (int offsetRow, int offsetCol) directionOffset(string direction)
+        {
+            switch (direction)
+            {
+                case "B": return (-1, 0);
+                case "F": return (1, 0);
+                case "R": return (0, 1);
+                case "L": return (0, -1);
+                default: return (0, 0);
+            }
+        }
+
+        private string reverseDirection(string direction)
+        {
+            switch (direction)
+            {
+                case "B": return "F";
+                case "F": return "B";
+                case "R": return "L";
+                case "L": return "R";
+                default: return direction;
+            }
+        }
+
+        private Vector2 getDoorEntrySpawn(string entranceDirection)
+        {
+            int tilesAway = 2;
+            for (int i = 0; i < doorDirections.Length; i++)
+            {
+                if (doorDirections[i] == entranceDirection)
+                {
+                    Rectangle doorRect = doorRectangles[i];
+                    float spawnX = doorRect.X;
+                    float spawnY = doorRect.Y;
+
+                    switch (entranceDirection)
+                    {
+                        case "B": // back/top entrance: move player down away from wall
+                            spawnY += tilesAway * tilesetTileDimensions * tileScale.Y;
+                            break;
+                        case "F": // front/bottom entrance: move player up into room
+                            spawnY -= tilesAway * tilesetTileDimensions * tileScale.Y;
+                            break;
+                        case "L": // left entrance: move player right into room
+                            spawnX += tilesAway * tilesetTileDimensions * tileScale.X;
+                            break;
+                        case "R": // right entrance: move player left into room
+                            spawnX -= tilesAway * tilesetTileDimensions * tileScale.X;
+                            break;
+                    }
+                    return new Vector2(spawnX + (doorRect.Width - playerTexture.FrameWidth) / 2, spawnY + (doorRect.Height - playerTexture.FrameHeight) / 2);
+                }
+            }
+            // Fallback: (center of viewport)
+            return new Vector2(
+                (viewport.Width / 2) - (playerTexture.FrameWidth / 2),
+                (viewport.Height / 2) - (playerTexture.FrameHeight / 2)
+            );
         }
 
         protected override void Update(GameTime gameTime)
@@ -128,7 +202,41 @@ namespace _2006827_Tian_GameControlUI
                 movingLeft = false;
             }
 
-            if (!checkForWallCollision(newCharacterPosition, playerTexture, tilemapLayerOne.getWallCollisionRect()))
+            string tunnelDirection = "";
+            var doorCheck = checkForCollision(newCharacterPosition, playerTexture, doorRectangles);
+            if (doorCheck.collided && doorCheck.index >= 0)
+            {
+                if (!movingToNextRoom)
+                {
+                    movingToNextRoom = true;
+                    tunnelDirection = doorDirections[doorCheck.index];
+
+                    var offset = directionOffset(tunnelDirection);
+                    int newRow = currentRoom.Row + offset.offsetRow;
+                    int newCol = currentRoom.Col + offset.offsetCol;
+
+                    Room nextRoom = cave.roomList.FirstOrDefault(r => r.Row == newRow && r.Col == newCol);
+                    if (nextRoom != null)
+                    {
+                        currentRoom = nextRoom;
+                        currentRoomNumber = currentRoom.RoomNumber;
+
+                        string entranceDirection = reverseDirection(tunnelDirection);
+                        characterPos = getDoorEntrySpawn(entranceDirection);
+                        System.Diagnostics.Debug.WriteLine("entered room #" + currentRoomNumber.ToString());
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("no room in that direction");
+                    }
+                }
+            }
+            else
+            {
+                movingToNextRoom = false;
+            }
+
+            if (!checkForCollision(newCharacterPosition, playerTexture, tilemapLayerOne.getWallCollisionRect()).collided && !movingToNextRoom)
             {
                 characterPos = newCharacterPosition;
             }
