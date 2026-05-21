@@ -230,14 +230,15 @@ namespace GameLocations
                 }
             }
         }
-        public bool[] CheckHazards()
+        public (bool[] hazards, string[] hazardNames) CheckHazards()
         {
+            string[] hazardNames = { "Pit", "Bat", "Wumpus" };
             //the first one is if there is a pit in the room, the second one is if there are bats in the room and the third one is if the wumpus is in the room
             bool[] hazards = new bool[3];
             hazards[0] = IsPitLocation(PlayerLocation);
             hazards[1] = IsBatLocation(PlayerLocation);
             hazards[2] = PlayerLocation == WumpusLocation;
-            return hazards;
+            return (hazards, hazardNames);
         }
     }
 }
