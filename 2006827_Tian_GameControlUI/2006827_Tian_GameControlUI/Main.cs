@@ -158,7 +158,6 @@ namespace _2006827_Tian_GameControlUI
                     return new Vector2(spawnX + (doorRect.Width - playerTexture.FrameWidth) / 2, spawnY + (doorRect.Height - playerTexture.FrameHeight) / 2);
                 }
             }
-            // Fallback: (center of viewport)
             return new Vector2(
                 (viewport.Width / 2) - (playerTexture.FrameWidth / 2),
                 (viewport.Height / 2) - (playerTexture.FrameHeight / 2)
