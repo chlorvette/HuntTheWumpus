@@ -10,6 +10,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Xml.Linq;
 using Cave = CaveGeneration.Cave;
 using Room = CaveGeneration.Room;
+using GameLocation = GameLocations.GameLocations;
+using System.Collections.Generic;
 
 namespace _2006827_Tian_GameControlUI
 {
@@ -41,10 +43,13 @@ namespace _2006827_Tian_GameControlUI
         private Rectangle[] doorRectangles;
         private string[] doorDirections;
 
-        private Cave cave = new Cave(3, 30, 6);
+        private int caveHeight = 5;
+        private int tunnelsPerRoom = 3;
+        private int caveWidth = 6;
+        private Cave cave;
         private Room currentRoom;
-        private int currentRoomNumber = 1;
         private bool movingToNextRoom = false;
+        private GameLocation gameLocation;
 
         public Main()
         {
@@ -55,7 +60,9 @@ namespace _2006827_Tian_GameControlUI
             tilemapLayerZero = new Tilemap(Content, tilesetImageName, tilemapsLocation+ "tilemapLayer0Template.txt", tilesetTileDimensions, (tilemapHeightTiles, tilemapWidthTiles), tileScale, tilesetKeyPath, tilesetChoicesPerType, tilesetTotalTypes);
             tilemapLayerOne = new Tilemap(Content, tilesetImageName, tilemapsLocation + "tilemapLayer1Template.txt", tilesetTileDimensions, (tilemapHeightTiles, tilemapWidthTiles), tileScale, tilesetKeyPath, tilesetChoicesPerType, tilesetTotalTypes);
             (doorRectangles, doorDirections) = tilemapLayerOne.getDoorCollisionRect();
-            currentRoom = cave.GetRoom(currentRoomNumber);
+            cave = new Cave(tunnelsPerRoom, caveHeight, caveWidth);
+            gameLocation = new GameLocation(cave.roomList.Count);
+            currentRoom = cave.GetRoom(gameLocation.PlayerLocation);
         }
 
         protected override void Initialize()
@@ -215,18 +222,41 @@ namespace _2006827_Tian_GameControlUI
                     int newCol = currentRoom.Col + offset.offsetCol;
 
                     Room nextRoom = cave.roomList.FirstOrDefault(r => r.Row == newRow && r.Col == newCol);
-                    if (nextRoom != null)
+                    if (nextRoom != null && currentRoom.RoomTunnels.Contains(nextRoom))
                     {
                         currentRoom = nextRoom;
-                        currentRoomNumber = currentRoom.RoomNumber;
-
+                        gameLocation.PlayerLocation = currentRoom.RoomNumber;
+                        gameLocation.MovePlayer(currentRoom.RoomNumber);
+                        List<int> adjRoomNumbers = new List<int>();
+                        foreach (Room room in currentRoom.RoomTunnels)
+                        {
+                            adjRoomNumbers.Add(room.RoomNumber);
+                        }
+                        string warnings = gameLocation.GetHazardWarning(adjRoomNumbers);
+                        if (warnings != "") System.Diagnostics.Debug.WriteLine(warnings);
+                        (bool[] hazardsInRoom, string[] hazardNames) = gameLocation.CheckHazards();
+                        for (int hazardIndex = 0; hazardIndex < hazardsInRoom.Length; hazardIndex++)
+                        {
+                            if (hazardsInRoom[hazardIndex])
+                            {
+                                System.Diagnostics.Debug.WriteLine(hazardNames[hazardIndex]);
+                                if (hazardNames[hazardIndex] == "Bat")
+                                {
+                                    gameLocation.MovePlayerToRandomLocation();
+                                }
+                            }
+                        }
+                        System.Diagnostics.Debug.WriteLine("entered room #" + gameLocation.PlayerLocation.ToString());
                         string entranceDirection = reverseDirection(tunnelDirection);
                         characterPos = getDoorEntrySpawn(entranceDirection);
-                        System.Diagnostics.Debug.WriteLine("entered room #" + currentRoomNumber.ToString());
+                    }
+                    else if (nextRoom == null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("no room in that direction");
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("no room in that direction");
+                        System.Diagnostics.Debug.WriteLine("you try the door, but it doesn't budge.");
                     }
                 }
             }
