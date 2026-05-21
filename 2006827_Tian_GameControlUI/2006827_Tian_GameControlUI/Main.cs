@@ -11,7 +11,10 @@ using System.Xml.Linq;
 using Cave = CaveGeneration.Cave;
 using Room = CaveGeneration.Room;
 using GameLocation = GameLocations.GameLocations;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using Color = Microsoft.Xna.Framework.Color;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace _2006827_Tian_GameControlUI
 {
@@ -19,6 +22,11 @@ namespace _2006827_Tian_GameControlUI
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        // text configuration
+        private SpriteFont font;
+        private string fontDescriptionFile = "fontDescription";
+        private int padding = 10;
 
         private AnimatedTexture playerTexture;
         private Tilemap tilemapLayerZero;
@@ -90,6 +98,8 @@ namespace _2006827_Tian_GameControlUI
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            font = Content.Load<SpriteFont>(fontDescriptionFile);
 
             playerTexture.Load(Content, playerAsset, frames, columns, rows, framesPerSec);
             playerTexture.Row = 0; // play first row (idling animation)
@@ -320,6 +330,7 @@ namespace _2006827_Tian_GameControlUI
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             tilemapLayerZero.Draw(_spriteBatch);
             tilemapLayerOne.Draw(_spriteBatch);
+            _spriteBatch.DrawString(font, "room " + gameLocation.PlayerLocation.ToString(), new Vector2((tilesetTileDimensions * tileScale.X) + padding + 5, (tilesetTileDimensions * tileScale.Y) + padding), Color.White, 0, Vector2.Zero, 1.0f, SpriteEffects.None, 0.5f);
             playerTexture.DrawFrame(_spriteBatch, characterPos, playerSpriteEffect);
             _spriteBatch.End();
 

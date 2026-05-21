@@ -37,6 +37,13 @@
 /processorParam:TextureFormat=Color
 /build:arrow.png
 
+#begin fontDescription.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fontDescription.spritefont
+
 #begin map/Dungeon_Tileset.png
 /importer:TextureImporter
 /processor:TextureProcessor
