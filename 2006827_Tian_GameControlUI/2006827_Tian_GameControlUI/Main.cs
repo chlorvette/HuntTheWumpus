@@ -99,7 +99,7 @@ namespace _2006827_Tian_GameControlUI
             characterPos = new Vector2((viewport.Width / 2) - (playerTexture.FrameWidth / 2), (viewport.Height / 2) - (playerTexture.FrameHeight / 2));
         }
 
-        private (bool collided, Rectangle rect, int index) checkForCollision(Vector2 newCharacterPos, AnimatedTexture playerTexture, Rectangle[] collisionRectangles)
+        private (bool collided, Rectangle rect, int index) checkForRectangleCollision(Vector2 newCharacterPos, AnimatedTexture playerTexture, Rectangle[] collisionRectangles)
         {
             Rectangle playerRectangle = new Rectangle((int)newCharacterPos.X, (int)newCharacterPos.Y, playerTexture.FrameWidth, playerTexture.FrameHeight);
             for (int i = 0; i < collisionRectangles.Length; i++)
@@ -209,7 +209,7 @@ namespace _2006827_Tian_GameControlUI
             }
 
             string tunnelDirection = "";
-            var doorCheck = checkForCollision(newCharacterPosition, playerTexture, doorRectangles);
+            var doorCheck = checkForRectangleCollision(newCharacterPosition, playerTexture, doorRectangles);
             if (doorCheck.collided && doorCheck.index >= 0)
             {
                 if (!movingToNextRoom)
@@ -265,7 +265,7 @@ namespace _2006827_Tian_GameControlUI
                 movingToNextRoom = false;
             }
 
-            if (!checkForCollision(newCharacterPosition, playerTexture, tilemapLayerOne.getWallCollisionRect()).collided && !movingToNextRoom)
+            if (!checkForRectangleCollision(newCharacterPosition, playerTexture, tilemapLayerOne.getWallCollisionRect()).collided && !movingToNextRoom)
             {
                 characterPos = newCharacterPosition;
             }
