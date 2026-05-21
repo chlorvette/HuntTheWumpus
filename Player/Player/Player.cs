@@ -1,4 +1,6 @@
-﻿namespace Player
+﻿using System.Numerics;
+
+namespace Player
 {
     public class Player
     {
@@ -39,7 +41,7 @@
                 Console.WriteLine("You have no arrows left. The Wumpus eats you and you die");
                 IsAlive = false;
             }
-            EndingScore = GetScore(WumpuseAlive);
+            EndingScore = GetScore(WumpusAlive);
         }
         public bool EncounterWumpus()
         {
@@ -47,12 +49,12 @@
             {
                 Console.WriteLine("You have no arrows left. The Wumpus eats you and you die");
                 IsAlive = false;
-                EndingScore = GetScore(WumpuseAlive);
+                EndingScore = GetScore(WumpusAlive);
                 return false;
             }
             
             Arrows--;
-            EndingScore = GetScore(WumpuseAlive);
+            EndingScore = GetScore(WumpusAlive);
             return true; 
         }
         public bool Gold_Arrows()
@@ -67,7 +69,7 @@
             else
             {
                 Console.WriteLine("You have no gold coins left");
-                EndingScore = GetScore(WumpuseAlive);
+                EndingScore = GetScore(WumpusAlive);
                 return false;
             }
         }
@@ -76,7 +78,7 @@
         {
             if (!IsAlive) return;
             Turns++;
-            EndingScore = GetScore(WumpuseAlive);
+            EndingScore = GetScore(WumpusAlive);
         }
 
         public void Display()
