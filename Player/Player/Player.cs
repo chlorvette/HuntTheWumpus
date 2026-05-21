@@ -8,7 +8,7 @@
         public int Turns { get; set; } = 0;
         public int EndingScore { get; set; } = 0;
         public bool IsAlive { get; set; } = true;
-        public bool WumpuseAlive { get; set; } = true;
+        public bool WumpusAlive { get; set; } = true;
 
         public Player()
         {
