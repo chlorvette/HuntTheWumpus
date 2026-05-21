@@ -65,7 +65,13 @@ namespace CaveGeneration
         public List<Room> GetAdjacentRoomsForRoomNumber(int roomNumber) 
         {
             var room = GetRoom(roomNumber);
-            return room.AdjacentRooms;
+            List<Room> adjacentRooms = room.AdjacentRooms;
+            List<int> adjacentRoomNumbers = new List<int>();
+            foreach (Room adjacentRoom in adjacentRooms)
+            {
+                adjacentRoomNumbers.Add(adjacentRoom.RoomNumber);
+            }
+            return (adjacentRooms, adjacentRoomNumbers);
         }
         public List<Room> GetTunnelRooms(int roomNumber)
         {
