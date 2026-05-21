@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Gum.Forms.Controls;
 using Gum.Wireframe;
@@ -14,7 +15,7 @@ namespace Cerda_Trivia
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        // Gum service
+        // Gum service (kept for other UI)
         private GumService gumService => GumService.Default;
 
         // Configuration / visuals
@@ -31,11 +32,12 @@ namespace Cerda_Trivia
         private SpriteFont mainQuestion;
         private SpriteFont answerList;
 
-        // Keep references to option buttons so we can disable them
-        private Button option1;
-        private Button option2;
-        private Button option3;
-        private Button option4;
+        // Dialog visuals
+        private Rectangle dialogRect;
+        private Texture2D _pixel;
+
+        // Option buttons (custom, not Gum Buttons)
+        private readonly List<OptionButton> _optionButtons = new();
 
         public Game1()
         {
@@ -49,71 +51,74 @@ namespace Cerda_Trivia
             // Initialize Gum and other systems
             gumService.Initialize(this);
 
-            // Load question from your TriviaManager (assumes it provides an AllQuestionsInfo-like property)
+            // Load question from your TriviaManager
             try
             {
                 var manager = new TriviaManager();
-                // Expecting a tuple or object with Question, Answers and CorrectIndex
-                // Adjust this access if TriviaManager has a different API.
                 var first = manager.allQuestionsInfo;
                 if (!string.IsNullOrEmpty(first.Question))
                 {
                     question = first.Question ?? string.Empty;
                     possibleAnswers = string.Join("\n", first.Answers ?? Array.Empty<string>());
                     correctAnswer = first.CorrectIndex;
-                    OptionButtons(first.Answers);
+                    CreateDialogAndOptions(first.Answers);
                 }
             }
             catch
             {
-                // If TriviaManager is not available or fails, keep defaults
+                // If question cant load use defualt
                 question = "No question loaded";
                 possibleAnswers = string.Empty;
                 correctAnswer = -1;
-                OptionButtons(null);
+                CreateDialogAndOptions(null);
             }
 
             base.Initialize();
         }
 
-        private void OptionButtons(string[]? options)
+        private void CreateDialogAndOptions(string[]? options)
         {
-            // Create a panel as container (simple usage)
-            var mainPanel = new Gum.Forms.Controls.Panel();
-            // If Gum panel supports positioning, you can set properties here. Keep minimal to avoid compile-time assumptions.
+            // Define dialog size and position centered on screen
+            int dialogWidth = 700;
+            int dialogHeight = 260;
+            int centerX = GraphicsDevice?.Viewport.Width ?? 800;
+            int centerY = GraphicsDevice?.Viewport.Height ?? 480;
+            dialogRect = new Rectangle((centerX - dialogWidth) / 2, (centerY - dialogHeight) / 2, dialogWidth, dialogHeight);
 
-            // Create option buttons and set text safely
-            option1 = new Button();
-            option1.Text = (options != null && options.Length > 0) ? options[0] : "Option 1";
-            mainPanel.AddChild(option1);
+            // Clear existing buttons
+            _optionButtons.Clear();
 
-            option2 = new Button();
-            option2.Text = (options != null && options.Length > 1) ? options[1] : "Option 2";
-            mainPanel.AddChild(option2);
+            // Create option texts 
+            string[] fallback = new[] { "Option 1", "Option 2", "Option 3", "Option 4" };
+            var texts = new string[4];
+            for (int i = 0; i < 4; i++)
+            {
+                texts[i] = (options != null && options.Length > i && !string.IsNullOrEmpty(options[i])) ? options[i] : fallback[i];
+            }
 
-            option3 = new Button();
-            option3.Text = (options != null && options.Length > 2) ? options[2] : "Option 3";
-            mainPanel.AddChild(option3);
+            // Layout: vertical list inside dialog, leaving padding
+            int padding = 16;
+            int questionAreaHeight = 72;
+            int availableHeight = dialogRect.Height - questionAreaHeight - padding * 2;
+            int buttonSpacing = 10;
+            int buttonHeight = (availableHeight - buttonSpacing * 3) / 4;
+            int buttonWidth = dialogRect.Width - padding * 2;
+            int startX = dialogRect.X + padding;
+            int startY = dialogRect.Y + padding + questionAreaHeight;
 
-            option4 = new Button();
-            option4.Text = (options != null && options.Length > 3) ? options[3] : "Option 4";
-            mainPanel.AddChild(option4);
-
-            // Attach click handlers (buttons are 1-indexed for the UI)
-            option1.Click += (s, e) => CheckAnswer(1, option1, option2, option3, option4);
-            option2.Click += (s, e) => CheckAnswer(2, option2, option1, option3, option4);
-            option3.Click += (s, e) => CheckAnswer(3, option3, option1, option2, option4);
-            option4.Click += (s, e) => CheckAnswer(4, option4, option1, option2, option3);
-
-            // Optionally add the main panel to Gum root or show it as appropriate for your project
-            // Example (if Gum has a Root):
-            // gumService.Root.AddChild(mainPanel);
+            for (int i = 0; i < 4; i++)
+            {
+                var rect = new Rectangle(startX, startY + i * (buttonHeight + buttonSpacing), buttonWidth, buttonHeight);
+                int index = i; // capture
+                var btn = new OptionButton(rect, texts[i], () => CheckAnswer(index));
+                _optionButtons.Add(btn);
+            }
         }
 
-        private async void CheckAnswer(int selectedOption, Button clicked, Button b1, Button b2, Button b3)
+        private async void CheckAnswer(int selectedIndex)
         {
-            // selectedOption is 1-based, correctAnswer is expected to be 0-based
-            if (correctAnswer >= 0 && selectedOption - 1 == correctAnswer)
+            // selectedIndex is zero-based to match correctAnswer
+            if (correctAnswer >= 0 && selectedIndex == correctAnswer)
             {
                 mainQuestionColor = Color.Green;
             }
@@ -122,10 +127,10 @@ namespace Cerda_Trivia
                 mainQuestionColor = Color.Red;
 
                 // Disable all option buttons
-                option1.IsEnabled = false;
-                option2.IsEnabled = false;
-                option3.IsEnabled = false;
-                option4.IsEnabled = false;
+                foreach (var b in _optionButtons)
+                {
+                    b.IsEnabled = false;
+                }
 
                 // Wait a moment so user sees result, then exit
                 await Task.Delay(1000);
@@ -137,10 +142,13 @@ namespace Cerda_Trivia
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            // 1x1 white pixel texture used to draw rectangles/borders
+            _pixel = new Texture2D(GraphicsDevice, 1, 1);
+            _pixel.SetData(new[] { Color.White });
+
             // Load fonts - asset names should match your Content pipeline items
-            // Avoid spaces in asset names; changed "Possible Answers" to "PossibleAnswers"
             mainQuestion = Content.Load<SpriteFont>("Question");
-            answerList = Content.Load<SpriteFont>("PossibleAnswers");
+            answerList = Content.Load<SpriteFont>("Possible Answers");
         }
 
         protected override void Update(GameTime gameTime)
@@ -152,7 +160,13 @@ namespace Cerda_Trivia
                 Exit();
             }
 
-            // Update Gum
+            // Update our option buttons (handles clicks)
+            foreach (var b in _optionButtons)
+            {
+                b.Update();
+            }
+
+            // Update Gum for other UI
             gumService.Update(gameTime);
 
             base.Update(gameTime);
@@ -162,21 +176,91 @@ namespace Cerda_Trivia
         {
             GraphicsDevice.Clear(backgroundColor);
 
-            // Draw main question centered near top
+            // Draw dialog background (semi-transparent) and border
+            _spriteBatch.Begin();
+
+            // Background
+            _spriteBatch.Draw(_pixel, dialogRect, Color.Black * 0.85f);
+
+            // Draw question text inside dialog
             if (!string.IsNullOrEmpty(question) && mainQuestion != null)
             {
-                Vector2 questionSize = mainQuestion.MeasureString(question);
-                Vector2 mainQuestionPos = new Vector2(GraphicsDevice.Viewport.Width / 2f, 100f) - questionSize / 2f;
-
-                _spriteBatch.Begin();
-                _spriteBatch.DrawString(mainQuestion, question, mainQuestionPos, mainQuestionColor);
-                _spriteBatch.End();
+                Vector2 questionPos = new Vector2(dialogRect.X + 16, dialogRect.Y + 12);
+                _spriteBatch.DrawString(mainQuestion, question, questionPos, mainQuestionColor);
             }
 
-            // Draw Gum UI
+            // Draw option buttons
+            foreach (var b in _optionButtons)
+            {
+                b.Draw(_spriteBatch, _pixel, answerList);
+            }
+
+            _spriteBatch.End();
+
+            // Draw Gum UI (if any) on top
             gumService.Draw();
 
             base.Draw(gameTime);
+        }
+
+        // Simple option button class for in-game dialog buttons
+        private class OptionButton
+        {
+            public Rectangle Rect;
+            public string Text;
+            public bool IsEnabled = true;
+            private readonly Action _onClick;
+            private bool _wasPressed;
+
+            public OptionButton(Rectangle rect, string text, Action onClick)
+            {
+                Rect = rect;
+                Text = text ?? string.Empty;
+                _onClick = onClick ?? (() => { });
+            }
+
+            public void Update()
+            {
+                if (!IsEnabled)
+                {
+                    _wasPressed = false;
+                    return;
+                }
+
+                var mouse = Mouse.GetState();
+                bool inside = Rect.Contains(mouse.Position);
+
+                if (mouse.LeftButton == ButtonState.Pressed)
+                {
+                    if (inside)
+                        _wasPressed = true;
+                }
+                else
+                {
+                    if (_wasPressed && inside)
+                    {
+                        // Click detected on release
+                        _onClick();
+                    }
+                    _wasPressed = false;
+                }
+            }
+
+            public void Draw(SpriteBatch sb, Texture2D pixel, SpriteFont font)
+            {
+                // Background
+                Color bg = IsEnabled ? Color.DimGray * 0.95f : Color.Gray * 0.7f;
+                sb.Draw(pixel, Rect, bg);
+
+                // Text (centered)
+                if (font != null && !string.IsNullOrEmpty(Text))
+                {
+                    Vector2 size = font.MeasureString(Text);
+                    Vector2 pos = new Vector2(Rect.X + Rect.Width / 2f - size.X / 2f, Rect.Y + Rect.Height / 2f - size.Y / 2f);
+                    Color textColor = IsEnabled ? Color.White : Color.LightGray;
+                    sb.DrawString(font, Text, pos, textColor);
+                }
+            }
         }
     }
 }
