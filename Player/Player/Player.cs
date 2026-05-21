@@ -2,32 +2,28 @@
 {
     public class Player
     {
-        public int Arrows { get; set; }
-        public int GoldCoins { get; set; }
-        public int Turns { get; set; }
-        public int EndingScore { get; set; }
+
+        public int Arrows { get; set; } = 3;
+        public int GoldCoins { get; set; } = 0;
+        public int Turns { get; set; } = 0;
+        public int EndingScore { get; set; } = 0;
         public bool IsAlive { get; set; } = true;
         public bool WumpuseAlive { get; set; } = true;
 
         public Player()
         {
-            Arrows = 3;
-            GoldCoins = 0;
-            Turns = 0;
-            IsAlive = true;
-            WumpuseAlive = true;
-            EndingScore = 0;
-            
+
         }
         public int GetScore(bool WumpusAlive)
         {
             // Score never drops below 0
-            EndingScore = Math.Max(0, 100 - Turns + GoldCoins + (5 * Arrows));
+            int Score = Math.Max(0, 100 - Turns + GoldCoins + (5 * Arrows));
             if (!WumpusAlive)
             {
-                EndingScore += 50; // Bonus for killing the Wumpus
+                Score += 50; // Bonus for killing the Wumpus
             }
-            return EndingScore;
+            
+            return Score;
         }
         public void ShootArrow()
         {
@@ -43,7 +39,7 @@
                 Console.WriteLine("You have no arrows left. The Wumpus eats you and you die");
                 IsAlive = false;
             }
-            GetScore(WumpuseAlive);
+            EndingScore = GetScore(WumpuseAlive);
         }
         public bool EncounterWumpus()
         {
@@ -51,12 +47,12 @@
             {
                 Console.WriteLine("You have no arrows left. The Wumpus eats you and you die");
                 IsAlive = false;
-                GetScore(WumpuseAlive);
+                EndingScore = GetScore(WumpuseAlive);
                 return false;
             }
             
             Arrows--;
-            GetScore(WumpuseAlive);
+            EndingScore = GetScore(WumpuseAlive);
             return true; 
         }
         public bool Gold_Arrows()
@@ -71,7 +67,7 @@
             else
             {
                 Console.WriteLine("You have no gold coins left");
-                GetScore(WumpuseAlive);
+                EndingScore = GetScore(WumpuseAlive);
                 return false;
             }
         }
@@ -80,7 +76,7 @@
         {
             if (!IsAlive) return;
             Turns++;
-            GetScore(WumpuseAlive);
+            EndingScore = GetScore(WumpuseAlive);
         }
 
         public void Display()
