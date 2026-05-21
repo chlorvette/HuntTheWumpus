@@ -19,7 +19,7 @@ namespace CaveGeneration
 
         public int RoomNumber { get; set; }
         public List<Room> AdjacentRooms { get; set; }
-        public List<Room> RoomTunnel { get; set; }
+        public List<Room> RoomTunnels { get; set; }
         public int Row { get; set; }
         public int Col { get; set; }
 
@@ -30,7 +30,7 @@ namespace CaveGeneration
             Col = y;
 
             AdjacentRooms = new List<Room>();
-            RoomTunnel = new List<Room>();
+            RoomTunnels = new List<Room>();
         }
 
 
@@ -70,7 +70,7 @@ namespace CaveGeneration
         public List<Room> GetTunnelRooms(int roomNumber)
         {
             var room = GetRoom(roomNumber);
-            return room.RoomTunnel;
+            return room.RoomTunnels;
         }
         public List<Room> GetFullCaveLayout()
         {
@@ -80,8 +80,8 @@ namespace CaveGeneration
         public List<Room> GetTunnels(int roomNumber)
         {
             
-                var room = GetRoom(roomNumber);
-            return room.RoomTunnel;
+            var room = GetRoom(roomNumber);
+            return room.RoomTunnels;
         }
         public bool IsInRoomIndex(int roomNumber)
         {
@@ -141,7 +141,7 @@ namespace CaveGeneration
             {
                 Debug.WriteLine($"Room Number: {room.RoomNumber} \n");
                 Debug.WriteLine($"Adjacent Rooms: {string.Join(", ", room.AdjacentRooms.Select(r => r.RoomNumber))} \n");
-                Debug.WriteLine($"Tunnel Rooms: {string.Join(", ", room.RoomTunnel.Select(r => r.RoomNumber))} \n");
+                Debug.WriteLine($"Tunnel Rooms: {string.Join(", ", room.RoomTunnels.Select(r => r.RoomNumber))} \n");
                 Debug.WriteLine("\n");
             }
         }
@@ -150,7 +150,7 @@ namespace CaveGeneration
         {
             foreach (var room in rooms)
             {
-                room.RoomTunnel.Clear();
+                room.RoomTunnels.Clear();
             }
             return rooms;
         }
@@ -213,8 +213,8 @@ namespace CaveGeneration
 
                 var nextRoomRef = roomsNotHit.First(r => r.RoomNumber == nextRoom.RoomNumber);
 
-                currentRoom.RoomTunnel.Add(nextRoomRef);
-                nextRoomRef.RoomTunnel.Add(currentRoom);
+                currentRoom.RoomTunnels.Add(nextRoomRef);
+                nextRoomRef.RoomTunnels.Add(currentRoom);
 
                 Path.Add(nextRoomRef);
                 roomsNotHit.Remove(nextRoomRef);
