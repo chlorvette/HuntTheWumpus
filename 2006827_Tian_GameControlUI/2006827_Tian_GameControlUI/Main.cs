@@ -82,7 +82,7 @@ namespace _2006827_Tian_GameControlUI
         private Vector2 characterPos;
         private SpriteEffects playerSpriteEffect;
         private int moveSpeed = 5;
-        private const int frames = 5;
+        private int frames = 5;
         private const int columns = 11;
         private const int rows = 5;
         private const int framesPerSec = 10;
@@ -90,6 +90,7 @@ namespace _2006827_Tian_GameControlUI
         // setting initial values
         private bool isMoving = false;
         private bool movingLeft = false;
+        private bool drawingArrow = false;
 
         protected override void LoadContent()
         {
@@ -146,21 +147,6 @@ namespace _2006827_Tian_GameControlUI
             }
         }
 
-        private (string, string) getRelativeDoorPositions(string entranceDirection)
-        {
-            switch (entranceDirection)
-            {
-                case "B":
-                case "F":
-                    return ("L", "R");
-                case "L":
-                case "R":
-                    return ("T", "B");
-                default:
-                    return ("", "");
-            }
-        }
-
         private Vector2 getDoorEntrySpawn(string entranceDirection)
         {
             int tilesAway = 2;
@@ -206,6 +192,7 @@ namespace _2006827_Tian_GameControlUI
             }
 
             isMoving = false;
+            drawingArrow = false;
             Vector2 newCharacterPosition = characterPos;
             if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
@@ -232,8 +219,13 @@ namespace _2006827_Tian_GameControlUI
                 isMoving = true;
                 movingLeft = false;
             }
+            
+            if (keyboardState.IsKeyDown(Keys.Space))
+            {
+                drawingArrow = true;
+            }
 
-            string tunnelDirection = "";
+                string tunnelDirection = "";
             var doorCheck = checkForRectangleCollision(newCharacterPosition, playerTexture, doorRectangles);
             if (doorCheck.collided && doorCheck.index >= 0)
             {
@@ -273,7 +265,7 @@ namespace _2006827_Tian_GameControlUI
                                 if (hazardNames[hazardIndex] == "Bat")
                                 {
                                     gameLocation.MovePlayerToRandomLocation();
-                                } 
+                                }
                             }
                         }
                         System.Diagnostics.Debug.WriteLine("entered room #" + gameLocation.PlayerLocation.ToString());
@@ -306,10 +298,17 @@ namespace _2006827_Tian_GameControlUI
 
             if (isMoving)
             {
+                drawingArrow = false;
                 playerTexture.Row = 2; // walk animation
+                frames = 8;
+            } else if (drawingArrow)
+            {
+                playerTexture.Row = 1;
+                frames = 11;
             } else
             {
                 playerTexture.Row = 0; // idle animation
+                frames = 5;
             }
 
             if (movingLeft)

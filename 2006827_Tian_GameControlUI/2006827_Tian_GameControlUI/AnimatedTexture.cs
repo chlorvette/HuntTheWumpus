@@ -25,6 +25,7 @@ namespace GameControlUI
         public Vector2 Origin;
         public int FrameHeight;
         public int FrameWidth;
+        public bool arrowReleased = false;
 
         // constructor
         public AnimatedTexture(Vector2 origin, float rotation, Vector2 scale, float depth)
@@ -56,7 +57,16 @@ namespace GameControlUI
             totalElapsed += elapsed;
             if (totalElapsed > timePerFrame)
             {
+                if (this.Row == 1 && !arrowReleased && frame >= 3)
+                {
+                    if (frame == 7)
+                    {
+                        frame = 3;
+                        System.Diagnostics.Debug.WriteLine("frame reset to 3");
+                    }
+                }
                 frame++;
+                System.Diagnostics.Debug.WriteLine($"frame #{frame} this.Row {this.Row} arrowReleased {arrowReleased}");
                 frame %= frameCount;
                 totalElapsed -= timePerFrame;
             }
