@@ -24,6 +24,9 @@ namespace _2006827_Tian_GameControlUI
         private AnimatedTexture playerTexture;
         private Tilemap tilemapLayerZero;
         private Tilemap tilemapLayerOne;
+        private Texture2D doorLock;
+        private string doorLockAssetName = "lock";
+        private int? lockedDoorIndex = null;
 
         // player configuration
         private const float playerRotation = 0;
@@ -96,6 +99,8 @@ namespace _2006827_Tian_GameControlUI
 
             playerTexture.Load(Content, playerAsset, frames, columns, rows, framesPerSec);
             playerTexture.Row = 0; // play first row (idling animation)
+
+            doorLock = Content.Load<Texture2D>(doorLockAssetName);
 
             tilemapLayerZero.Load(Content);
             tilemapLayerOne.Load(Content);
@@ -248,6 +253,7 @@ namespace _2006827_Tian_GameControlUI
                         gameLocation.PlayerLocation = currentRoom.RoomNumber;
                         gameLocation.MovePlayer(currentRoom.RoomNumber);
                         gameLocation.OneTurnPasses();
+                        System.Diagnostics.Debug.WriteLine("one turn passes");
                         string warnings = gameLocation.GetHazardWarning(cave.GetAdjacentRoomsForRoomNumber(gameLocation.PlayerLocation).roomNumbers);
                         if (warnings != "") System.Diagnostics.Debug.WriteLine(warnings);
                         (bool[] hazardsInRoom, string[] hazardNames) = gameLocation.CheckHazards();
@@ -273,20 +279,24 @@ namespace _2006827_Tian_GameControlUI
                         System.Diagnostics.Debug.WriteLine("entered room #" + gameLocation.PlayerLocation.ToString());
                         string entranceDirection = reverseDirection(tunnelDirection);
                         characterPos = getDoorEntrySpawn(entranceDirection);
+                        lockedDoorIndex = null;
                     }
                     else if (nextRoom == null)
                     {
                         System.Diagnostics.Debug.WriteLine("no room in that direction");
+                        lockedDoorIndex = doorCheck.index;
                     }
                     else
                     {
                         System.Diagnostics.Debug.WriteLine("you try the door, but it doesn't budge.");
+                        lockedDoorIndex = doorCheck.index;
                     }
                 }
             }
             else
             {
                 movingToNextRoom = false;
+                lockedDoorIndex = null;
             }
 
             if (!checkForRectangleCollision(newCharacterPosition, playerTexture, tilemapLayerOne.getWallCollisionRect()).collided && !movingToNextRoom)
@@ -323,6 +333,29 @@ namespace _2006827_Tian_GameControlUI
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             tilemapLayerZero.Draw(_spriteBatch);
             tilemapLayerOne.Draw(_spriteBatch);
+            if (lockedDoorIndex != null && lockedDoorIndex.Value >= 0 && lockedDoorIndex.Value < doorRectangles.Length)
+            {
+                Rectangle lockedDoorRect = doorRectangles[lockedDoorIndex.Value];
+                int lockWidth = doorLock.Width;
+                int lockHeight = doorLock.Height;
+
+                string direction = doorDirections[lockedDoorIndex.Value];
+
+                float lockX = lockedDoorRect.X + (doorLock.Width) / 2f;
+                float lockY = lockedDoorRect.Y + (doorLock.Height) / 2f;
+
+                if (direction == "L" || direction == "R")
+                {
+                    lockX = lockedDoorRect.X;
+                    lockY = lockedDoorRect.Y + (lockedDoorRect.Height) / 2f;
+                }
+                else if (direction == "B" || direction == "F")
+                {
+                    lockX = lockedDoorRect.X + (lockedDoorRect.Width - doorLock.Width) / 2f;
+                    lockY = lockedDoorRect.Y + (lockedDoorRect.Height - doorLock.Height) / 2f;
+                }
+                _spriteBatch.Draw(doorLock, new Vector2(lockX, lockY), Color.White);
+            }
             _spriteBatch.DrawString(font, "room " + gameLocation.PlayerLocation.ToString(), new Vector2((tilesetTileDimensions * tileScale.X) + padding + 5, (tilesetTileDimensions * tileScale.Y) + padding), Color.White, 0, Vector2.Zero, 1.0f, SpriteEffects.None, 0.5f);
             playerTexture.DrawFrame(_spriteBatch, characterPos, playerSpriteEffect);
             _spriteBatch.End();
