@@ -7,6 +7,8 @@ Assets:
 
 [Pixel Art Archer](https://gandalfhardcore.itch.io/pixel-art-archer-character)
 
+[Pixel Art Lock](https://sevenevesai.itch.io/1000-modern-rpg-icon-pack)
+
 Software:
 
 [MonoGame Framework](https://monogame.net/)
