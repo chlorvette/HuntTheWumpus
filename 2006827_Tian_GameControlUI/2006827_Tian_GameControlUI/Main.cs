@@ -44,26 +44,6 @@ namespace _2006827_Tian_GameControlUI
         private string tilesetKeyPath = @"..\..\..\Content\map\tilesetKey.txt";
         private string tilesetImageName = "map/Dungeon_Tileset";
         private string tilemapsLocation = @"..\..\..\Content\map\";
-        private string[] wallTileAssetNames = new string[]
-        {
-            "wallTiles/BW1",
-            "wallTiles/BW2",
-            "wallTiles/BW3",
-            "wallTiles/BW4",
-            "wallTiles/FW1",
-            "wallTiles/FW2",
-            "wallTiles/FW3",
-            "wallTiles/FW4",
-            "wallTiles/LW1",
-            "wallTiles/LW2",
-            "wallTiles/LW3",
-            "wallTiles/LW4",
-            "wallTiles/RW1",
-            "wallTiles/RW2",
-            "wallTiles/RW3",
-            "wallTiles/RW4"
-        };
-        private Texture2D[] wallTiles;
 
         private Rectangle[] doorRectangles;
         private string[] doorDirections;
@@ -84,13 +64,11 @@ namespace _2006827_Tian_GameControlUI
             playerTexture = new AnimatedTexture(Vector2.Zero, playerRotation, playerScale, playerDepth);
             tilemapLayerZero = new Tilemap(Content, tilesetImageName, tilemapsLocation+ "tilemapLayer0Template.txt", tilesetTileDimensions, (tilemapHeightTiles, tilemapWidthTiles), tileScale, tilesetKeyPath, tilesetChoicesPerType, tilesetTotalTypes);
             tilemapLayerOne = new Tilemap(Content, tilesetImageName, tilemapsLocation + "tilemapLayer1Template.txt", tilesetTileDimensions, (tilemapHeightTiles, tilemapWidthTiles), tileScale, tilesetKeyPath, tilesetChoicesPerType, tilesetTotalTypes);
-            wallTiles = new Texture2D[wallTileAssetNames.Length];
             (doorRectangles, doorDirections) = tilemapLayerOne.getDoorCollisionRect();
             cave = new Cave(tunnelsPerRoom, caveHeight, caveWidth);
             gameLocation = new GameLocation(cave.roomList.Count);
             currentRoom = cave.GetRoom(gameLocation.PlayerLocation);
             string warning = gameLocation.GetHazardWarning(cave.GetAdjacentRoomsForRoomNumber(gameLocation.PlayerLocation).roomNumbers);
-
         }
 
         protected override void Initialize()
@@ -127,21 +105,8 @@ namespace _2006827_Tian_GameControlUI
             tilemapLayerZero.Load(Content);
             tilemapLayerOne.Load(Content);
 
-            for (int wallTileIndex = 0; wallTileIndex < wallTileAssetNames.Length; wallTileIndex++)
-            {
-                wallTiles[wallTileIndex] = Content.Load<Texture2D>(wallTileAssetNames[wallTileIndex]);
-            }
-
             viewport = _graphics.GraphicsDevice.Viewport;
             characterPos = new Vector2((viewport.Width / 2) - (playerTexture.FrameWidth / 2), (viewport.Height / 2) - (playerTexture.FrameHeight / 2));
-        }
-
-        private bool roomExists(Room room, string direction)
-        {
-            (int, int) offset = directionOffset(direction);
-            int searchRow = room.Row + offset.Item1;
-            int searchCol = room.Col + offset.Item2;
-            return searchRow >= 0 && searchRow < caveHeight && searchCol >= 0 && searchCol < caveWidth;
         }
 
         private (bool collided, Rectangle rect, int index) checkForRectangleCollision(Vector2 newCharacterPos, AnimatedTexture playerTexture, Rectangle[] collisionRectangles)
