@@ -26,19 +26,20 @@ namespace GameControlUI
         public int FrameHeight;
         public int FrameWidth;
         public bool arrowReleased = false;
+        private int[] framesPerRow;
 
         // constructor
-        public AnimatedTexture(Vector2 origin, float rotation, Vector2 scale, float depth)
+        public AnimatedTexture(Vector2 origin, float rotation, Vector2 scale, float depth, int[] framesPerRow)
         {
             this.Origin = origin;
             this.Rotation = rotation;
             this.Scale = scale;
             this.Depth = depth;
+            this.framesPerRow = framesPerRow;
         }
 
-        public void Load(ContentManager content, string asset, int frameCount, int columns, int rows, int framesPerSec)
+        public void Load(ContentManager content, string asset, int columns, int rows, int framesPerSec)
         {
-            this.frameCount = frameCount;
             this.columns = columns;
             this.rows = rows;
             texture = content.Load<Texture2D>(asset);
@@ -50,6 +51,7 @@ namespace GameControlUI
 
         public void UpdateFrame(float elapsed)
         {
+            this.frameCount = framesPerRow[Row];
             if (isPaused)
             {
                 return;
@@ -62,11 +64,9 @@ namespace GameControlUI
                     if (frame == 7)
                     {
                         frame = 3;
-                        System.Diagnostics.Debug.WriteLine("frame reset to 3");
                     }
                 }
                 frame++;
-                System.Diagnostics.Debug.WriteLine($"frame #{frame} this.Row {this.Row} arrowReleased {arrowReleased}");
                 frame %= frameCount;
                 totalElapsed -= timePerFrame;
             }

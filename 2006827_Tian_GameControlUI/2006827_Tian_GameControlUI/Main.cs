@@ -33,6 +33,7 @@ namespace _2006827_Tian_GameControlUI
         private Vector2 playerScale = new Vector2(1f, 1f);
         private const float playerDepth = 0.5f;
         private const string playerAsset = "ArcherSheet";
+        private int[] framesPerRow = { 5, 10, 8, 5, 6 };
 
         // tilemap configuration
         private Vector2 tileScale = new Vector2(2f, 2f);
@@ -61,7 +62,7 @@ namespace _2006827_Tian_GameControlUI
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            playerTexture = new AnimatedTexture(Vector2.Zero, playerRotation, playerScale, playerDepth);
+            playerTexture = new AnimatedTexture(Vector2.Zero, playerRotation, playerScale, playerDepth, framesPerRow);
             tilemapLayerZero = new Tilemap(Content, tilesetImageName, tilemapsLocation+ "tilemapLayer0Template.txt", tilesetTileDimensions, (tilemapHeightTiles, tilemapWidthTiles), tileScale, tilesetKeyPath, tilesetChoicesPerType, tilesetTotalTypes);
             tilemapLayerOne = new Tilemap(Content, tilesetImageName, tilemapsLocation + "tilemapLayer1Template.txt", tilesetTileDimensions, (tilemapHeightTiles, tilemapWidthTiles), tileScale, tilesetKeyPath, tilesetChoicesPerType, tilesetTotalTypes);
             (doorRectangles, doorDirections) = tilemapLayerOne.getDoorCollisionRect();
@@ -98,7 +99,7 @@ namespace _2006827_Tian_GameControlUI
 
             font = Content.Load<SpriteFont>(fontDescriptionFile);
 
-            playerTexture.Load(Content, playerAsset, frames, columns, rows, framesPerSec);
+            playerTexture.Load(Content, playerAsset, columns, rows, framesPerSec);
             playerTexture.Row = 0; // play first row (idling animation)
 
             doorLock = Content.Load<Texture2D>(doorLockAssetName);
