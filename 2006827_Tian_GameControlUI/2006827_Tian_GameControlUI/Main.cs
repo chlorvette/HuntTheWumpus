@@ -25,6 +25,11 @@ namespace _2006827_Tian_GameControlUI
         private Tilemap tilemapLayerZero;
         private Tilemap tilemapLayerOne;
         private Texture2D doorLock;
+        private Texture2D wumpusTexture;
+        private Texture2D pitTexture;
+        private Texture2D wumpusWarningIconTexture;
+        private Texture2D pitWarningIconTexture;
+        private Texture2D batWarningIconTexture;
         private string doorLockAssetName = "lock";
         private int? lockedDoorIndex = null;
 
@@ -46,6 +51,21 @@ namespace _2006827_Tian_GameControlUI
         private string tilesetImageName = "map/Dungeon_Tileset";
         private string tilemapsLocation = @"..\..\..\Content\map\";
 
+        // hazards configuration
+        private const string wumpusAssetName = "hazards/tripleT";
+        private const string wumpusWarningIconName = "warningIcons/wumpusWarning";
+        private Vector2 wumpusWarningPos;
+        private bool showWumpus = false;
+        private bool wumpusWarningActive = false;
+        private const string pitAssetName = "hazards/pit";
+        private const string pitWarningIconName = "warningIcons/pitWarning";
+        private Vector2 pitWarningPos;
+        private bool showPit = false;
+        private bool pitWarningActive = false;
+        private const string batWarningIconName = "warningIcons/batWarning";
+        private Vector2 batWarningPos;
+        private bool batWarningActive = false;
+
         private Rectangle[] doorRectangles;
         private string[] doorDirections;
 
@@ -62,14 +82,23 @@ namespace _2006827_Tian_GameControlUI
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            
             playerTexture = new AnimatedTexture(Vector2.Zero, playerRotation, playerScale, playerDepth, framesPerRow);
+
+            float warningY = tilesetTileDimensions * tileScale.Y; // top row, plus some padding
+            wumpusWarningPos = new Vector2((tilemapWidthTiles - 2) * tilesetTileDimensions * tileScale.X, warningY);
+            pitWarningPos = new Vector2((tilemapWidthTiles - 3) * tilesetTileDimensions * tileScale.X, warningY);
+            batWarningPos = new Vector2((tilemapWidthTiles - 4) * tilesetTileDimensions * tileScale.X, warningY);
+
             tilemapLayerZero = new Tilemap(Content, tilesetImageName, tilemapsLocation+ "tilemapLayer0Template.txt", tilesetTileDimensions, (tilemapHeightTiles, tilemapWidthTiles), tileScale, tilesetKeyPath, tilesetChoicesPerType, tilesetTotalTypes);
             tilemapLayerOne = new Tilemap(Content, tilesetImageName, tilemapsLocation + "tilemapLayer1Template.txt", tilesetTileDimensions, (tilemapHeightTiles, tilemapWidthTiles), tileScale, tilesetKeyPath, tilesetChoicesPerType, tilesetTotalTypes);
+            
             (doorRectangles, doorDirections) = tilemapLayerOne.getDoorCollisionRect();
+
             cave = new Cave(tunnelsPerRoom, caveHeight, caveWidth);
             gameLocation = new GameLocation(cave.roomList.Count);
             currentRoom = cave.GetRoom(gameLocation.PlayerLocation);
-            string warning = gameLocation.GetHazardWarning(cave.GetAdjacentRoomsForRoomNumber(gameLocation.PlayerLocation).roomNumbers);
+            string warning = gameLocation.GetHazardWarning(cave.GetAdjacentRoomsForRoomNumber(gameLocation.PlayerLocation).roomNumbers).message;
         }
 
         protected override void Initialize()
@@ -101,6 +130,14 @@ namespace _2006827_Tian_GameControlUI
 
             playerTexture.Load(Content, playerAsset, columns, rows, framesPerSec);
             playerTexture.Row = 0; // play first row (idling animation)
+
+            wumpusTexture = Content.Load<Texture2D>(wumpusAssetName);
+            wumpusWarningIconTexture = Content.Load<Texture2D>(wumpusWarningIconName);
+
+            pitTexture = Content.Load<Texture2D>(pitAssetName);
+            pitWarningIconTexture = Content.Load<Texture2D>(pitWarningIconName);
+
+            batWarningIconTexture = Content.Load<Texture2D>(batWarningIconName);
 
             doorLock = Content.Load<Texture2D>(doorLockAssetName);
 
@@ -247,8 +284,15 @@ namespace _2006827_Tian_GameControlUI
                         gameLocation.MovePlayer(currentRoom.RoomNumber);
                         gameLocation.OneTurnPasses();
                         System.Diagnostics.Debug.WriteLine("one turn passes");
-                        string warnings = gameLocation.GetHazardWarning(cave.GetAdjacentRoomsForRoomNumber(gameLocation.PlayerLocation).roomNumbers);
-                        if (warnings != "") System.Diagnostics.Debug.WriteLine(warnings);
+                        showWumpus = false;
+                        showPit = false;
+                        
+                        (string warningMessages, bool[] warnings) = gameLocation.GetHazardWarning(cave.GetAdjacentRoomsForRoomNumber(gameLocation.PlayerLocation).roomNumbers);
+                        if (warningMessages != "") System.Diagnostics.Debug.WriteLine(warningMessages);
+                        pitWarningActive = warnings[0];
+                        batWarningActive = warnings[1];
+                        wumpusWarningActive = warnings[2];
+                        
                         (bool[] hazardsInRoom, string[] hazardNames) = gameLocation.CheckHazards();
                         for (int hazardIndex = 0; hazardIndex < hazardsInRoom.Length; hazardIndex++)
                         {
@@ -258,9 +302,11 @@ namespace _2006827_Tian_GameControlUI
                                 if (hazardNames[hazardIndex] == "Pit")
                                 {
                                     // trigger trivia, if correct, ClimbOutOfPit() else game over
+                                    showPit = true;
                                 }
                                 if (hazardNames[hazardIndex] == "Wumpus")
                                 {
+                                    showWumpus = true;
                                     // um idk whatever u do when encounter the wumpus ??
                                 }
                                 if (hazardNames[hazardIndex] == "Bat")

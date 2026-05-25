@@ -121,25 +121,31 @@ namespace GameLocations
             }
 
         }
-        public string GetHazardWarning(List<int> adjacentCaves)
+        public (string message, bool[] hazards) GetHazardWarning(List<int> adjacentCaves)
         {
             //checks if the positions of bats pits or wumpus are equal to the adjacent caves and if they are it adds the appropriate warning to the string that is returned
             //returns a string that tells the player what hazards are nearby
             string warning = "";
+            bool wumpus = false;
+            bool pit = false;
+            bool bat = false;
             if (adjacentCaves.Contains(WumpusLocation))
             {
                 warning += "You smell a terrible stench. ";
+                wumpus = true;
             }
             if (adjacentCaves.Contains(PitLocations[0]) || adjacentCaves.Contains(PitLocations[1]))
             {
                 warning += "You feel a cold wind blowing from a nearby cavern. ";
+                pit = true;
             }
             if (adjacentCaves.Contains(BatLocations[0]) || adjacentCaves.Contains(BatLocations[1]))
             {
                 warning += "You hear rustling of bat wings. ";
+                bat = true;
             }
 
-            return warning;
+            return (warning, new bool[3] { pit, bat, wumpus });
         }
         public string BuySecret()
         {
@@ -182,7 +188,7 @@ namespace GameLocations
             }
             return hit;
         }
-        public void MoveWumpusAfterArrowMiss(List<int> connectedCaves)
+        public void MoveWumpusAfterArrowMiss(List<Room> connectedCaves)
         {
             //moves the wumpus to a new location if the player misses and there is a 75% chance that the wumpus will move
             //wakes wumpus up if it is asleep and sets the turns until it is asleep to 3
@@ -193,7 +199,7 @@ namespace GameLocations
             ResetWumpusAsleepTimer();
             if (chance <= 3)
             {
-                WumpusLocation = connectedCaves[newLocation];
+                WumpusLocation = connectedCaves[newLocation].RoomNumber;
             }
 
         }
