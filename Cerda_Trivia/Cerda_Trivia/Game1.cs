@@ -154,13 +154,7 @@ namespace Cerda_Trivia
         protected override void Update(GameTime gameTime)
         {
             // Exit on Escape / Back
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Escape))
-            {
-                Exit();
-            }
-
-            // Update our option buttons (handles clicks)
+           // Update our option buttons (handles clicks)
             foreach (var b in _optionButtons)
             {
                 b.Update();
@@ -172,24 +166,57 @@ namespace Cerda_Trivia
             base.Update(gameTime);
         }
 
-        protected override void Draw(GameTime gameTime)
+        public void RunTriviaPopup()
         {
-            GraphicsDevice.Clear(backgroundColor);
+            HandleExitInput();
 
-            // Draw dialog background (semi-transparent) and border
-            _spriteBatch.Begin();
+            UpdateButtons();
 
-            // Background
-            _spriteBatch.Draw(_pixel, dialogRect, Color.Black * 0.85f);
+            DrawTriviaPopup();
 
-            // Draw question text inside dialog
-            if (!string.IsNullOrEmpty(question) && mainQuestion != null)
+            gumService.Update(new GameTime());
+        }
+
+        protected void HandleExitInput()
+        {
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+            Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
-                Vector2 questionPos = new Vector2(dialogRect.X + 16, dialogRect.Y + 12);
-                _spriteBatch.DrawString(mainQuestion, question, questionPos, mainQuestionColor);
+                Exit();
             }
 
-            // Draw option buttons
+        }
+
+        private void UpdateButtons()
+        {
+            foreach (var b in _optionButtons)
+            {
+                b.Update();
+            }
+        }
+
+        private void DrawTriviaPopup()
+        {
+            _spriteBatch.Begin();
+
+            // Dialog background
+            _spriteBatch.Draw(_pixel, dialogRect, Color.Black * 0.85f);
+
+            // Question text
+            if (!string.IsNullOrEmpty(question) && mainQuestion != null)
+            {
+                Vector2 questionPos =
+                    new Vector2(dialogRect.X + 16, dialogRect.Y + 12);
+
+                _spriteBatch.DrawString(
+                    mainQuestion,
+                    question,
+                    questionPos,
+                    mainQuestionColor);
+            }
+
+            // Draw buttons
             foreach (var b in _optionButtons)
             {
                 b.Draw(_spriteBatch, _pixel, answerList);
@@ -197,8 +224,13 @@ namespace Cerda_Trivia
 
             _spriteBatch.End();
 
-            // Draw Gum UI (if any) on top
             gumService.Draw();
+        }
+
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(backgroundColor);
 
             base.Draw(gameTime);
         }
