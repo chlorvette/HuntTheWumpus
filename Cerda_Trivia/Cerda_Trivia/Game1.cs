@@ -10,6 +10,7 @@ using MonoGameGum;
 
 namespace Cerda_Trivia
 {
+
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -35,6 +36,8 @@ namespace Cerda_Trivia
         // Dialog visuals
         private Rectangle dialogRect;
         private Texture2D _pixel;
+
+        private bool _showTriviaPopup = true;
 
         // Option buttons (custom, not Gum Buttons)
         private readonly List<OptionButton> _optionButtons = new();
@@ -76,8 +79,20 @@ namespace Cerda_Trivia
             base.Initialize();
         }
 
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // Load fonts - asset names should match your Content pipeline items
+            mainQuestion = Content.Load<SpriteFont>("Question");
+            answerList = Content.Load<SpriteFont>("Possible Answers");
+        }
+
         private void CreateDialogAndOptions(string[]? options)
         {
+
+            _showTriviaPopup = true;
+
             // Define dialog size and position centered on screen
             int dialogWidth = 700;
             int dialogHeight = 260;
@@ -115,60 +130,10 @@ namespace Cerda_Trivia
             }
         }
 
-        private async void CheckAnswer(int selectedIndex)
-        {
-            // selectedIndex is zero-based to match correctAnswer
-            if (correctAnswer >= 0 && selectedIndex == correctAnswer)
-            {
-                mainQuestionColor = Color.Green;
-            }
-            else
-            {
-                mainQuestionColor = Color.Red;
-
-                // Disable all option buttons
-                foreach (var b in _optionButtons)
-                {
-                    b.IsEnabled = false;
-                }
-
-                // Wait a moment so user sees result, then exit
-                await Task.Delay(1000);
-                Exit();
-            }
-        }
-
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // 1x1 white pixel texture used to draw rectangles/borders
-            _pixel = new Texture2D(GraphicsDevice, 1, 1);
-            _pixel.SetData(new[] { Color.White });
-
-            // Load fonts - asset names should match your Content pipeline items
-            mainQuestion = Content.Load<SpriteFont>("Question");
-            answerList = Content.Load<SpriteFont>("Possible Answers");
-        }
-
-        protected override void Update(GameTime gameTime)
-        {
-            // Exit on Escape / Back
-           // Update our option buttons (handles clicks)
-            foreach (var b in _optionButtons)
-            {
-                b.Update();
-            }
-
-            // Update Gum for other UI
-            gumService.Update(gameTime);
-
-            base.Update(gameTime);
-        }
-
         public void RunTriviaPopup()
         {
-            HandleExitInput();
+            if (_showTriviaPopup != true)
+                return;
 
             UpdateButtons();
 
@@ -177,30 +142,19 @@ namespace Cerda_Trivia
             gumService.Update(new GameTime());
         }
 
-        protected void HandleExitInput()
-        {
-
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-            Keyboard.GetState().IsKeyDown(Keys.Escape))
-            {
-                Exit();
-            }
-
-        }
-
-        private void UpdateButtons()
-        {
-            foreach (var b in _optionButtons)
-            {
-                b.Update();
-            }
-        }
-
         private void DrawTriviaPopup()
         {
+
+            if (_showTriviaPopup != true)
+                return;
+
             _spriteBatch.Begin();
 
             // Dialog background
+
+            _pixel = new Texture2D(GraphicsDevice, 1, 1);
+            _pixel.SetData(new[] { Color.White });
+
             _spriteBatch.Draw(_pixel, dialogRect, Color.Black * 0.85f);
 
             // Question text
@@ -225,6 +179,57 @@ namespace Cerda_Trivia
             _spriteBatch.End();
 
             gumService.Draw();
+        }
+
+        private async void CheckAnswer(int selectedIndex)
+        {
+            // selectedIndex is zero-based to match correctAnswer
+            if (correctAnswer >= 0 && selectedIndex == correctAnswer)
+            {
+                mainQuestionColor = Color.Green;
+            }
+            else
+            {
+                mainQuestionColor = Color.Red;
+
+                // Disable all option buttons
+                foreach (var b in _optionButtons)
+                {
+                    b.IsEnabled = false;
+                }
+
+                // Wait a moment so user sees result, then exit
+                await Task.Delay(1000);
+                _optionButtons.Clear();
+                _showTriviaPopup = false;
+                question = string.Empty;
+            }
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+            Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                Exit();
+            }
+
+            // Update Gum for other UI
+            gumService.Update(gameTime);
+
+            base.Update(gameTime);
+        }
+
+        private void UpdateButtons()
+        {
+
+            if (!_showTriviaPopup) return;
+
+            foreach (var b in _optionButtons)
+            {
+                b.Update();
+            }
         }
 
 
