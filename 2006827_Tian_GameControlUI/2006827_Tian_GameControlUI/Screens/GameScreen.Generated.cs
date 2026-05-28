@@ -43,6 +43,9 @@ if(element == null) throw new System.InvalidOperationException("Could not find a
     public Label turnNumberDisplay { get; protected set; }
     public Label numberOfArrowsDisplay { get; protected set; }
     public Label numberOfCoinsDisplay { get; protected set; }
+    public StackPanel StackPanelInstance1 { get; protected set; }
+    public ButtonStandard BuyArrowButton { get; protected set; }
+    public ButtonStandard BuySecretButton { get; protected set; }
 
     public GameScreen(InteractiveGue visual) : base(visual)
     {
@@ -62,6 +65,9 @@ if(element == null) throw new System.InvalidOperationException("Could not find a
         turnNumberDisplay = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"turnNumberDisplay");
         numberOfArrowsDisplay = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"numberOfArrowsDisplay");
         numberOfCoinsDisplay = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"numberOfCoinsDisplay");
+        StackPanelInstance1 = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<StackPanel>(this.Visual,"StackPanelInstance1");
+        BuyArrowButton = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<ButtonStandard>(this.Visual,"BuyArrowButton");
+        BuySecretButton = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<ButtonStandard>(this.Visual,"BuySecretButton");
         CustomInitialize();
     }
     //Not assigning variables because Object Instantiation Type is set to By Name rather than Fully In Code

@@ -3,6 +3,24 @@
   <Name>GameScreen</Name>
   <State>
     <Name>Default</Name>
+    <Variable Type="string" Name="BuyArrowButton.ButtonCategoryState" SetsValue="true">
+      <Value xsi:type="xsd:string">Enabled</Value>
+    </Variable>
+    <Variable Type="string" Name="BuyArrowButton.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">StackPanelInstance1</Value>
+    </Variable>
+    <Variable Type="string" Name="BuyArrowButton.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Buy Arrow</Value>
+    </Variable>
+    <Variable Type="string" Name="BuySecretButton.ButtonCategoryState" SetsValue="true">
+      <Value xsi:type="xsd:string">Enabled</Value>
+    </Variable>
+    <Variable Type="string" Name="BuySecretButton.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">StackPanelInstance1</Value>
+    </Variable>
+    <Variable Type="string" Name="BuySecretButton.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Buy Secret</Value>
+    </Variable>
     <Variable Type="string" Name="numberOfArrowsDisplay.Parent" SetsValue="true">
       <Value xsi:type="xsd:string">StackPanelInstance</Value>
     </Variable>
@@ -84,6 +102,15 @@
     <Variable Type="PositionUnitType" Name="StackPanelInstance.YUnits" SetsValue="true">
       <Value xsi:type="xsd:int">7</Value>
     </Variable>
+    <Variable Type="float" Name="StackPanelInstance1.StackSpacing" SetsValue="true">
+      <Value xsi:type="xsd:float">10</Value>
+    </Variable>
+    <Variable Type="float" Name="StackPanelInstance1.X" SetsValue="true">
+      <Value xsi:type="xsd:float">32</Value>
+    </Variable>
+    <Variable Type="float" Name="StackPanelInstance1.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">32</Value>
+    </Variable>
     <Variable Type="string" Name="turnNumberDisplay.Parent" SetsValue="true">
       <Value xsi:type="xsd:string">StackPanelInstance</Value>
     </Variable>
@@ -127,5 +154,8 @@
   <Instance Name="turnNumberDisplay" BaseType="Controls/Label" />
   <Instance Name="numberOfArrowsDisplay" BaseType="Controls/Label" />
   <Instance Name="numberOfCoinsDisplay" BaseType="Controls/Label" />
+  <Instance Name="StackPanelInstance1" BaseType="Controls/StackPanel" />
+  <Instance Name="BuyArrowButton" BaseType="Controls/ButtonStandard" />
+  <Instance Name="BuySecretButton" BaseType="Controls/ButtonStandard" />
   <Behaviors />
 </ScreenSave>

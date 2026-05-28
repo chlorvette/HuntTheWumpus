@@ -38,7 +38,7 @@ namespace GameControlUI.Screens
             this.AnswerChoiceB.Text = b;
             this.AnswerChoiceC.Text = c;
             this.AnswerChoiceD.Text = d;
-            if (totalQuestions != 0) this.PercentBarInstance.BarPercent = (questionNumber - 1) / totalQuestions;
+            if (totalQuestions != 0) this.PercentBarInstance.BarPercent = 100 * ((float)(questionNumber - 1) / totalQuestions);
         }
 
         public string GetRecentClicked()

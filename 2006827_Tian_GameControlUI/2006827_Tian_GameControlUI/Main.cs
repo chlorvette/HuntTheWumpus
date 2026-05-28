@@ -15,6 +15,7 @@ using Gum.DataTypes.Variables;
 using GameControlUI.Screens;
 using System.IO;
 using System;
+using System.Collections.Generic;
 
 namespace _2006827_Tian_GameControlUI
 {
@@ -88,6 +89,7 @@ namespace _2006827_Tian_GameControlUI
         ErrorDialog errorDialog;
         TriviaCorrect correctDialog;
         TriviaIncorrect incorrectDialog;
+        BuySecretConfirmation buySecretConfirmationScreen;
 
         // trivia configuration
         TriviaPopup triviaPopup;
@@ -101,7 +103,12 @@ namespace _2006827_Tian_GameControlUI
         private int questionNumber = 0;
         private int totalQuestionsThisRound = 0;
         private int correctAnswersThisRound = 0;
-        private bool triviaFinishedAwaitingResponse = false;
+        List<int> askedQuestions = new List<int>();
+        private enum TriviaReason { None, Pit, Wumpus, Arrow, Secret };
+        private TriviaReason triviaReason = TriviaReason.None;
+
+        private bool triviaActive = false;
+        private bool feedbackDialogOpen = false;
 
         private (string[] questions, string[,] answerChoices, string[] correctAnswer) parseTriviaFile( string triviaFilePath)
         {
@@ -147,7 +154,6 @@ namespace _2006827_Tian_GameControlUI
 
             cave = new Cave(tunnelsPerRoom, caveHeight, caveWidth);
             gameLocation = new GameLocation(cave.roomList.Count);
-            gameLocation.PlayerLocation = gameLocation.PitLocations[0];
             currentRoom = cave.GetRoom(gameLocation.PlayerLocation);
             string warning = gameLocation.GetHazardWarning(cave.GetAdjacentRoomsForRoomNumber(gameLocation.PlayerLocation).roomNumbers).message;
         }
@@ -162,54 +168,75 @@ namespace _2006827_Tian_GameControlUI
             //titleScreen.AddToRoot();
 
             gameScreen = new GameScreen();
+            gameScreen.BuyArrowButton.Click += (_, _) => buyArrowConfirmationScreen.AddToRoot();
+            gameScreen.BuySecretButton.Click += (_, _) => buySecretConfirmationScreen.AddToRoot();
             gameScreen.AddToRoot();
 
             buyArrowConfirmationScreen = new BuyArrowConfirmation();
-            buyArrowConfirmationScreen.ConfirmBuy.Click += (_, _) => BuyArrow();
-            buyArrowConfirmationScreen.CancelBuy.Click += (_, _) => ClearDialogs();
+            buyArrowConfirmationScreen.ConfirmBuy.Click += (_, _) => {
+                if (player.coins >=  3)
+                {
+                    StartTriviaRound(TriviaReason.Arrow); 
+                } else
+                {
+                    errorDialog.MessageLabel.Text = "You don't have enough coins to finish the trivia.";
+                    errorDialog.AddToRoot();
+                }
+                buyArrowConfirmationScreen.RemoveFromRoot();
+            };
+            buyArrowConfirmationScreen.CancelBuy.Click += (_, _) => buyArrowConfirmationScreen.RemoveFromRoot();
+
+
+            buySecretConfirmationScreen = new BuySecretConfirmation();
+            buySecretConfirmationScreen.ConfirmBuy.Click += (_, _) =>
+            {
+                if (player.coins >= 3)
+                {
+                    StartTriviaRound(TriviaReason.Secret);
+                } else
+                {
+                    errorDialog.MessageLabel.Text = "You don't have enough coins to finish the trivia.";
+                    errorDialog.AddToRoot();
+                }
+                buySecretConfirmationScreen.RemoveFromRoot();
+            };
+            buySecretConfirmationScreen.CancelBuy.Click += (_, _) => buySecretConfirmationScreen.RemoveFromRoot();
 
             errorDialog = new ErrorDialog();
-            errorDialog.ButtonCloseInstance.Click += (_, _) => ClearDialogs();
+            errorDialog.ButtonCloseInstance.Click += (_, _) => errorDialog.RemoveFromRoot();
 
             triviaPopup = new TriviaPopup();
 
             correctDialog = new TriviaCorrect();
             correctDialog.ButtonOK.Click += (_, _) =>
             {
-                ClearDialogs();
-                if (questionNumber <= totalQuestionsThisRound && totalQuestionsThisRound != 0)
-                {
+                correctDialog.RemoveFromRoot();
+                feedbackDialogOpen = false;
+
+                answerAwaitingResponse = false;
+
+                if (!triviaActive) return;
+
+                if (questionNumber <= totalQuestionsThisRound)
                     PromptTriviaQuestion(questionNumber, totalQuestionsThisRound);
-                } else if (totalQuestionsThisRound == 0)
-                {
-                    if (gameLocation.PlayerLocation == gameLocation.PitLocations[0] || gameLocation.PlayerLocation == gameLocation.PitLocations[1])
-                    {
-                        if (correctAnswersThisRound >= 2) gameLocation.ClimbOutOfPit();
-                        else { gameStarted = false; }
-                    } else if (gameLocation.PlayerLocation == gameLocation.WumpusLocation) {
-                        if (correctAnswersThisRound >= 3) { } // umm win against wumpus idk what procedure is for that
-                    }
-                }
                 else
-                {
-                    totalQuestionsThisRound = 0;
-                    questionNumber = 0;
-                }
+                    FinishTriviaRound();
             };
 
             incorrectDialog = new TriviaIncorrect();
             incorrectDialog.ButtonOK.Click += (_, _) =>
             {
-                ClearDialogs();
-                if (questionNumber <= totalQuestionsThisRound && totalQuestionsThisRound != 0)
-                {
+                incorrectDialog.RemoveFromRoot();
+                feedbackDialogOpen = false;
+
+                answerAwaitingResponse = false;
+
+                if (!triviaActive) return;
+
+                if (questionNumber <= totalQuestionsThisRound)
                     PromptTriviaQuestion(questionNumber, totalQuestionsThisRound);
-                }
                 else
-                {
-                    totalQuestionsThisRound = 0;
-                    questionNumber = 0;
-                }
+                    FinishTriviaRound();
             };
 
             base.Initialize();
@@ -254,12 +281,102 @@ namespace _2006827_Tian_GameControlUI
             characterPos = new Vector2((viewport.Width / 2) - (playerTexture.FrameWidth / 2), (viewport.Height / 2) - (playerTexture.FrameHeight / 2));
         }
 
+        private void StartTriviaRound(TriviaReason reason)
+        {
+            int totalQuestions;
+            if (reason == TriviaReason.Pit)
+            {
+                totalQuestions = 3;
+            }
+            else if (reason == TriviaReason.Wumpus)
+            {
+                totalQuestions = 5;
+            }
+            else if (reason == TriviaReason.Arrow)
+            {
+                totalQuestions = 3;
+            }
+            else if (reason == TriviaReason.Secret)
+            {
+                totalQuestions = 3;
+            }
+            else
+            {
+                totalQuestions = 0;
+            }
+
+            triviaReason = reason;
+            triviaActive = true;
+            feedbackDialogOpen = false;
+
+            totalQuestionsThisRound = totalQuestions;
+            questionNumber = 1;
+            correctAnswersThisRound = 0;
+
+            PromptTriviaQuestion(questionNumber, totalQuestionsThisRound);
+        }
+
+        private void FinishTriviaRound()
+        {
+            triviaActive = false;
+            feedbackDialogOpen = false;
+            player.TakeTurn();
+
+            switch (triviaReason)
+            {
+                case TriviaReason.Pit:
+                    if (correctAnswersThisRound >= 2)
+                    {
+                        gameLocation.ClimbOutOfPit();
+                        showPit = false;
+                    }
+                    else
+                    {
+                        EndGame();
+                    }
+                    break;
+                case TriviaReason.Wumpus:
+                    if (correctAnswersThisRound >= 3)
+                    {
+                        // wumpus run away logic
+                    }
+                    else
+                    {
+                        EndGame();
+                    }
+                    break;
+                case TriviaReason.Arrow:
+                    if (correctAnswersThisRound >= 2)
+                    {
+                        player.arrows += 2;
+                    }
+                    break;
+                case TriviaReason.Secret:
+                    if (correctAnswersThisRound >= 2)
+                    {
+                        errorDialog.MessageLabel.Text = gameLocation.BuySecret();
+                        errorDialog.AddToRoot();
+                    }
+                    break;
+            }
+
+            triviaReason = TriviaReason.None;
+            totalQuestionsThisRound = 0;
+            questionNumber = 0;
+            currentQuestionIndex = -1;
+        }
+
         private void PromptTriviaQuestion(int questionNumber, int totalQuestions)
         {
             if (!answerAwaitingResponse)
             {
+                if (!player.UseCoin()) {
+                    EndGame();
+                    return;
+                }
                 Random r = new Random();
-                currentQuestionIndex = r.Next(0, triviaQuestions.Length);
+                while (askedQuestions.Contains(currentQuestionIndex) || currentQuestionIndex == -1) currentQuestionIndex = r.Next(0, triviaQuestions.Length);
+                askedQuestions.Add(currentQuestionIndex);
 
                 string question = triviaQuestions[currentQuestionIndex];
                 string correctAnswer = triviaCorrectAnswers[currentQuestionIndex];
@@ -299,6 +416,7 @@ namespace _2006827_Tian_GameControlUI
                 currentQuestionIndex = -1;
                 triviaPopup.ResetClicked();
                 answerAwaitingResponse = false;
+                triviaPopup.RemoveFromRoot();
             }
             return (answered, correct);
         }
@@ -338,6 +456,12 @@ namespace _2006827_Tian_GameControlUI
                 case "L": return "R";
                 default: return direction;
             }
+        }
+
+        private void EndGame()
+        {
+            ClearDialogs();
+            // show end screen with final score and option to restart
         }
 
         private (bool successful, bool shotWumpus) ShootArrow(string direction)
@@ -399,16 +523,7 @@ namespace _2006827_Tian_GameControlUI
 
         private void BuyArrow()
         {
-            if (player.UseCoin(3))
-            {
-                player.arrows++;
-                player.TakeTurn();
-                ClearDialogs();
-            } else
-            {
-                errorDialog.MessageLabel.Text = "Not enough coins to buy an arrow!";
-                errorDialog.AddToRoot();
-            }
+            StartTriviaRound(TriviaReason.Arrow);
         }
 
         private void ClearDialogs()
@@ -420,6 +535,34 @@ namespace _2006827_Tian_GameControlUI
 
         protected override void Update(GameTime gameTime)
         {
+            if (triviaActive)
+            {
+                GumUI.Update(gameTime);
+
+                (bool questionWasAnswered, bool questionIsCorrect) = CheckTriviaAnswer();
+                if (questionWasAnswered && !feedbackDialogOpen)
+                {
+                    feedbackDialogOpen = true;
+
+                    if (questionIsCorrect)
+                    {
+                        correctAnswersThisRound++;
+                        correctDialog.AddToRoot();
+                    }
+                    else
+                    {
+                        incorrectDialog.AddToRoot();
+                    }
+
+                    questionNumber++;
+                }
+
+                float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                playerTexture.UpdateFrame(elapsed);
+
+                base.Update(gameTime);
+                return;
+            }
             if (gameStarted)
             {
                 // keyboard input => player movement
@@ -461,12 +604,6 @@ namespace _2006827_Tian_GameControlUI
                 if (keyboardState.IsKeyDown(Keys.Space))
                 {
                     drawingArrow = true;
-                }
-
-                if (keyboardState.IsKeyDown(Keys.B) && !buyArrowConfShown)
-                {
-                    buyArrowConfShown = true;
-                    buyArrowConfirmationScreen.AddToRoot();
                 }
 
                 if (drawingArrow && (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up)))
@@ -531,16 +668,13 @@ namespace _2006827_Tian_GameControlUI
                                     System.Diagnostics.Debug.WriteLine(hazardNames[hazardIndex]);
                                     if (hazardNames[hazardIndex] == "Pit")
                                     {
-                                        questionNumber = 1;
-                                        totalQuestionsThisRound = 3;
-
-                                        PromptTriviaQuestion(questionNumber, totalQuestionsThisRound);
-
                                         showPit = true;
+                                        StartTriviaRound(TriviaReason.Pit);
                                     }
                                     if (hazardNames[hazardIndex] == "Wumpus")
                                     {
                                         showWumpus = true;
+                                        StartTriviaRound(TriviaReason.Wumpus);
                                         // um idk whatever u do when encounter the wumpus ??
                                         // must answer 3 out of 5 trivia questions correctly to avoid being eaten
                                         // if answered 3 out of 5 wumpus will run as many as 4 rooms away and if you win the fight you lose the game
@@ -608,28 +742,21 @@ namespace _2006827_Tian_GameControlUI
             }
 
             (bool questionAnswered, bool questionCorrect) = CheckTriviaAnswer();
-            if (questionAnswered)
+            if (questionAnswered && triviaActive && !feedbackDialogOpen)
             {
+                feedbackDialogOpen = true;
+
                 if (questionCorrect)
                 {
-                    correctDialog.AddToRoot();
                     correctAnswersThisRound++;
-                    System.Diagnostics.Debug.WriteLine($"questionCorrect is true, {correctAnswersThisRound} correct answers this round, question number {questionNumber}, total questions this round {totalQuestionsThisRound}");
+                    correctDialog.AddToRoot();
                 }
                 else
                 {
                     incorrectDialog.AddToRoot();
-                    System.Diagnostics.Debug.WriteLine($"questionCorrect is false, {correctAnswersThisRound} correct answers this round, question number {questionNumber}, total questions this round {totalQuestionsThisRound}");
                 }
+                
                 questionNumber++;
-                if (questionNumber <= totalQuestionsThisRound)
-                {
-                    //PromptTriviaQuestion(questionNumber, totalQuestionsThisRound);
-                } else
-                {
-                    totalQuestionsThisRound = 0;
-                    questionNumber = 0;
-                }
             }
 
             GumUI.Update(gameTime);

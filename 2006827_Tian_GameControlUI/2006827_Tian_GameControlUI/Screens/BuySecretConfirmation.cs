@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace GameControlUI.Screens
 {
-    partial class ErrorDialog
+    partial class BuySecretConfirmation
     {
         partial void CustomInitialize()
         {

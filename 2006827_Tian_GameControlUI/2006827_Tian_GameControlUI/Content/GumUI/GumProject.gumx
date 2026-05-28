@@ -54,6 +54,7 @@
   <ShowLocalizationInGum>true</ShowLocalizationInGum>
   <CurrentLanguageIndex>0</CurrentLanguageIndex>
   <ScreenReference Name="BuyArrowConfirmation" />
+  <ScreenReference Name="BuySecretConfirmation" />
   <ScreenReference Name="DemoScreenGum" />
   <ScreenReference Name="ErrorDialog" />
   <ScreenReference Name="GameScreen" />
