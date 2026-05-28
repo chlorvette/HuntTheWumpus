@@ -332,7 +332,7 @@ namespace _2006827_Tian_GameControlUI
                     }
                     else
                     {
-                        EndGame();
+                        EndGame(false);
                     }
                     break;
                 case TriviaReason.Wumpus:
@@ -342,7 +342,7 @@ namespace _2006827_Tian_GameControlUI
                     }
                     else
                     {
-                        EndGame();
+                        EndGame(false);
                     }
                     break;
                 case TriviaReason.Arrow:
@@ -371,7 +371,7 @@ namespace _2006827_Tian_GameControlUI
             if (!answerAwaitingResponse)
             {
                 if (!player.UseCoin()) {
-                    EndGame();
+                    EndGame(false);
                     return;
                 }
                 Random r = new Random();
@@ -458,7 +458,7 @@ namespace _2006827_Tian_GameControlUI
             }
         }
 
-        private void EndGame()
+        private void EndGame(bool win)
         {
             ClearDialogs();
             // show end screen with final score and option to restart
@@ -479,6 +479,10 @@ namespace _2006827_Tian_GameControlUI
                     gameLocation.MoveWumpusAfterArrowMiss(cave.GetRoom(gameLocation.WumpusLocation).RoomTunnels);
                 }
                 player.arrows--;
+                if (player.arrows <= 0)
+                {
+                    EndGame(false);
+                }
                 return (true, shotWumpus);
             } else
             {
@@ -606,25 +610,36 @@ namespace _2006827_Tian_GameControlUI
                     drawingArrow = true;
                 }
 
+                bool arrowShot = false;
+                bool arrowHit = false;
                 if (drawingArrow && (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up)))
                 {
                     playerTexture.arrowReleased = true;
-                    ShootArrow("B");
+                    (arrowShot, arrowHit) = ShootArrow("B");
                 }
                 if (drawingArrow && (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down)))
                 {
                     playerTexture.arrowReleased = true;
-                    ShootArrow("F");
+                    (arrowShot, arrowHit) = ShootArrow("F");
                 }
                 if (drawingArrow && (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left)))
                 {
                     playerTexture.arrowReleased = true;
-                    ShootArrow("L");
+                    (arrowShot, arrowHit) = ShootArrow("L");
                 }
                 if (drawingArrow && (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right)))
                 {
                     playerTexture.arrowReleased = true;
-                    ShootArrow("R");
+                    (arrowShot, arrowHit) = ShootArrow("R");
+                }
+
+                if (arrowShot)
+                {
+                    if (arrowHit)
+                    {
+                        // wumpus killed set true
+                        EndGame(true);
+                    }
                 }
 
                 string tunnelDirection = "";

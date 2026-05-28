@@ -102,14 +102,20 @@
     <Variable Type="PositionUnitType" Name="StackPanelInstance.YUnits" SetsValue="true">
       <Value xsi:type="xsd:int">7</Value>
     </Variable>
+    <Variable Type="float" Name="StackPanelInstance1.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">64</Value>
+    </Variable>
     <Variable Type="float" Name="StackPanelInstance1.StackSpacing" SetsValue="true">
       <Value xsi:type="xsd:float">10</Value>
     </Variable>
+    <Variable Type="float" Name="StackPanelInstance1.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">128</Value>
+    </Variable>
     <Variable Type="float" Name="StackPanelInstance1.X" SetsValue="true">
-      <Value xsi:type="xsd:float">32</Value>
+      <Value xsi:type="xsd:float">40</Value>
     </Variable>
     <Variable Type="float" Name="StackPanelInstance1.Y" SetsValue="true">
-      <Value xsi:type="xsd:float">32</Value>
+      <Value xsi:type="xsd:float">40</Value>
     </Variable>
     <Variable Type="string" Name="turnNumberDisplay.Parent" SetsValue="true">
       <Value xsi:type="xsd:string">StackPanelInstance</Value>
