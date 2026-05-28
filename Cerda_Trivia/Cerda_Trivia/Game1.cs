@@ -10,7 +10,6 @@ using MonoGameGum;
 
 namespace Cerda_Trivia
 {
-
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -63,13 +62,14 @@ namespace Cerda_Trivia
                 {
                     question = first.Question ?? string.Empty;
                     possibleAnswers = string.Join("\n", first.Answers ?? Array.Empty<string>());
-                    correctAnswer = first.CorrectIndex;
+                    // If TriviaManager.CorrectIndex is 1-based, keep the -1; if it's already zero-based, adjust accordingly.
+                    correctAnswer = first.CorrectIndex - 1;
                     CreateDialogAndOptions(first.Answers);
                 }
             }
             catch
             {
-                // If question cant load use defualt
+                // If question can't load use default
                 question = "No question loaded";
                 possibleAnswers = string.Empty;
                 correctAnswer = -1;
@@ -83,9 +83,37 @@ namespace Cerda_Trivia
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Load fonts - asset names should match your Content pipeline items
-            mainQuestion = Content.Load<SpriteFont>("Question");
-            answerList = Content.Load<SpriteFont>("Possible Answers");
+            // Create a single white pixel texture once (avoid recreating each frame)
+            _pixel = new Texture2D(GraphicsDevice, 1, 1);
+            _pixel.SetData(new[] { Color.White });
+
+            // Load fonts - asset names should match your Content pipeline items.
+            // Try both common possibilities in case of naming with/without spaces.
+            try
+            {
+                mainQuestion = Content.Load<SpriteFont>("Question");
+            }
+            catch
+            {
+                mainQuestion = null!;
+            }
+
+            try
+            {
+                // Preferred asset name without spaces; keep a fallback to the original if necessary.
+                answerList = Content.Load<SpriteFont>("PossibleAnswers");
+            }
+            catch
+            {
+                try
+                {
+                    answerList = Content.Load<SpriteFont>("Possible Answers");
+                }
+                catch
+                {
+                    answerList = null!;
+                }
+            }
         }
 
         private void CreateDialogAndOptions(string[]? options)
@@ -139,7 +167,7 @@ namespace Cerda_Trivia
 
             DrawTriviaPopup();
 
-            gumService.Update(new GameTime());
+            // gumService.Update is called from Update(gameTime) so avoid creating a default GameTime here.
         }
 
         private void DrawTriviaPopup()
@@ -151,10 +179,6 @@ namespace Cerda_Trivia
             _spriteBatch.Begin();
 
             // Dialog background
-
-            _pixel = new Texture2D(GraphicsDevice, 1, 1);
-            _pixel.SetData(new[] { Color.White });
-
             _spriteBatch.Draw(_pixel, dialogRect, Color.Black * 0.85f);
 
             // Question text
@@ -236,6 +260,8 @@ namespace Cerda_Trivia
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(backgroundColor);
+
+            RunTriviaPopup();
 
             base.Draw(gameTime);
         }

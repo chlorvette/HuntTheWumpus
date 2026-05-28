@@ -74,7 +74,7 @@ namespace Cerda_Trivia
             new[] { "Harper Lee", "J.K. Rowling", "George R.R. Martin", "Suzanne Collins" },
             new[] { "He", "H", "Na", "N" },
             new[] { "Mauna Loa", "Tamu Massif", "Mauna Kea", "Olympus Mons" },
-            new[] { "Emmanuel Macron", "Nicolas Sarkozy", "François Hollande", "Jacques Chirac" },
+            new[] { "Emmanuel Macron", "Nicolas Sarkozy", "Francois Hollande", "Jacques Chirac" },
             new[] { "Na", "S", "N", "K" }
         };
 
