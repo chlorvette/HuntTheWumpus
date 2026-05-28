@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScreenSave xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>ErrorDialog</Name>
+  <State>
+    <Name>Default</Name>
+    <Variable Type="string" Name="ButtonCloseInstance.ButtonCategoryState" SetsValue="true">
+      <Value xsi:type="xsd:string">Enabled</Value>
+    </Variable>
+    <Variable Type="float" Name="ButtonCloseInstance.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">16</Value>
+    </Variable>
+    <Variable Type="string" Name="ButtonCloseInstance.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">WindowInstance</Value>
+    </Variable>
+    <Variable Type="float" Name="ButtonCloseInstance.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">16</Value>
+    </Variable>
+    <Variable Type="float" Name="ButtonCloseInstance.X" SetsValue="true">
+      <Value xsi:type="xsd:float">8</Value>
+    </Variable>
+    <Variable Type="float" Name="ButtonCloseInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">8</Value>
+    </Variable>
+    <Variable Type="int" Name="MessageLabel.FontSize" SetsValue="true">
+      <Value xsi:type="xsd:int">20</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="MessageLabel.HorizontalAlignment" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="float?" Name="MessageLabel.MaxWidth" SetsValue="true">
+      <Value xsi:type="xsd:float">224</Value>
+    </Variable>
+    <Variable Type="string" Name="MessageLabel.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">WindowInstance</Value>
+    </Variable>
+    <Variable Type="string" Name="MessageLabel.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Error message here</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="MessageLabel.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="MessageLabel.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="MessageLabel.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="MessageLabel.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">7</Value>
+    </Variable>
+    <Variable Type="float" Name="WindowInstance.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">128</Value>
+    </Variable>
+    <Variable Type="float" Name="WindowInstance.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">256</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="WindowInstance.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="WindowInstance.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="WindowInstance.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="WindowInstance.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">7</Value>
+    </Variable>
+  </State>
+  <Instance Name="WindowInstance" BaseType="Controls/Window" />
+  <Instance Name="ButtonCloseInstance" BaseType="Controls/ButtonClose" />
+  <Instance Name="MessageLabel" BaseType="Controls/Label" />
+  <Behaviors />
+</ScreenSave>

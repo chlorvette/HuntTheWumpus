@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScreenSave xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>TriviaPopup</Name>
+  <State>
+    <Name>Default</Name>
+    <Variable Type="string" Name="AnswerChoiceA.ButtonCategoryState" SetsValue="true">
+      <Value xsi:type="xsd:string">Enabled</Value>
+    </Variable>
+    <Variable Type="float" Name="AnswerChoiceA.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">32</Value>
+    </Variable>
+    <Variable Type="string" Name="AnswerChoiceA.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">StackPanelInstance1</Value>
+    </Variable>
+    <Variable Type="string" Name="AnswerChoiceA.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Choice A</Value>
+    </Variable>
+    <Variable Type="float" Name="AnswerChoiceA.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">256</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="AnswerChoiceA.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="AnswerChoiceA.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="AnswerChoiceA.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="AnswerChoiceA.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">7</Value>
+    </Variable>
+    <Variable Type="string" Name="AnswerChoiceB.ButtonCategoryState" SetsValue="true">
+      <Value xsi:type="xsd:string">Enabled</Value>
+    </Variable>
+    <Variable Type="float" Name="AnswerChoiceB.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">32</Value>
+    </Variable>
+    <Variable Type="string" Name="AnswerChoiceB.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">StackPanelInstance1</Value>
+    </Variable>
+    <Variable Type="string" Name="AnswerChoiceB.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Choice B</Value>
+    </Variable>
+    <Variable Type="float" Name="AnswerChoiceB.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">256</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="AnswerChoiceB.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="AnswerChoiceB.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="AnswerChoiceB.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="AnswerChoiceB.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">7</Value>
+    </Variable>
+    <Variable Type="string" Name="AnswerChoiceC.ButtonCategoryState" SetsValue="true">
+      <Value xsi:type="xsd:string">Enabled</Value>
+    </Variable>
+    <Variable Type="float" Name="AnswerChoiceC.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">32</Value>
+    </Variable>
+    <Variable Type="string" Name="AnswerChoiceC.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">StackPanelInstance1</Value>
+    </Variable>
+    <Variable Type="string" Name="AnswerChoiceC.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Choice C</Value>
+    </Variable>
+    <Variable Type="float" Name="AnswerChoiceC.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">256</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="AnswerChoiceC.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="AnswerChoiceC.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="AnswerChoiceC.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="AnswerChoiceC.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">7</Value>
+    </Variable>
+    <Variable Type="string" Name="AnswerChoiceD.ButtonCategoryState" SetsValue="true">
+      <Value xsi:type="xsd:string">Enabled</Value>
+    </Variable>
+    <Variable Type="float" Name="AnswerChoiceD.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">32</Value>
+    </Variable>
+    <Variable Type="string" Name="AnswerChoiceD.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">StackPanelInstance1</Value>
+    </Variable>
+    <Variable Type="string" Name="AnswerChoiceD.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Choice D</Value>
+    </Variable>
+    <Variable Type="float" Name="AnswerChoiceD.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">256</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="AnswerChoiceD.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="AnswerChoiceD.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="AnswerChoiceD.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="AnswerChoiceD.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">7</Value>
+    </Variable>
+    <Variable Type="int" Name="ColoredRectangleInstance.Blue" SetsValue="true">
+      <Value xsi:type="xsd:int">59</Value>
+    </Variable>
+    <Variable Type="int" Name="ColoredRectangleInstance.Green" SetsValue="true">
+      <Value xsi:type="xsd:int">37</Value>
+    </Variable>
+    <Variable Type="float" Name="ColoredRectangleInstance.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">60</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="ColoredRectangleInstance.HeightUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="int" Name="ColoredRectangleInstance.Red" SetsValue="true">
+      <Value xsi:type="xsd:int">61</Value>
+    </Variable>
+    <Variable Type="float" Name="ColoredRectangleInstance.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">80</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="ColoredRectangleInstance.WidthUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="ColoredRectangleInstance.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="ColoredRectangleInstance.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="ColoredRectangleInstance.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="ColoredRectangleInstance.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">7</Value>
+    </Variable>
+    <Variable Type="ColorCategory" Name="PercentBarInstance.BarColor" SetsValue="true">
+      <Value xsi:type="xsd:string">Gray</Value>
+    </Variable>
+    <Variable Type="float" Name="PercentBarInstance.BarPercent" SetsValue="true">
+      <Value xsi:type="xsd:float">0</Value>
+    </Variable>
+    <Variable Type="float" Name="PercentBarInstance.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">24</Value>
+    </Variable>
+    <Variable Type="string" Name="PercentBarInstance.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">StackPanelInstance</Value>
+    </Variable>
+    <Variable Type="float" Name="PercentBarInstance.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">90</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="PercentBarInstance.WidthUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="PercentBarInstance.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="PercentBarInstance.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="float" Name="PercentBarInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">20</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="PercentBarInstance.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="PercentBarInstance.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="string" Name="QuestionText.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">StackPanelInstance</Value>
+    </Variable>
+    <Variable Type="string" Name="QuestionText.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">The question will appear here.</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="QuestionText.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="QuestionText.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="QuestionText.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="QuestionText.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">7</Value>
+    </Variable>
+    <Variable Type="ChildrenLayout" Name="StackPanelInstance.ChildrenLayout" SetsValue="true">
+      <Value xsi:type="xsd:int">0</Value>
+    </Variable>
+    <Variable Type="float" Name="StackPanelInstance.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">50</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="StackPanelInstance.HeightUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="string" Name="StackPanelInstance.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">ColoredRectangleInstance</Value>
+    </Variable>
+    <Variable Type="float" Name="StackPanelInstance.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">100</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="StackPanelInstance.WidthUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="int" Name="StackPanelInstance1.AutoGridHorizontalCells" SetsValue="true">
+      <Value xsi:type="xsd:int">2</Value>
+    </Variable>
+    <Variable Type="int" Name="StackPanelInstance1.AutoGridVerticalCells" SetsValue="true">
+      <Value xsi:type="xsd:int">2</Value>
+    </Variable>
+    <Variable Type="ChildrenLayout" Name="StackPanelInstance1.ChildrenLayout" SetsValue="true">
+      <Value xsi:type="xsd:int">3</Value>
+    </Variable>
+    <Variable Type="float" Name="StackPanelInstance1.Height" SetsValue="true">
+      <Value xsi:type="xsd:float">50</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="StackPanelInstance1.HeightUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="string" Name="StackPanelInstance1.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">ColoredRectangleInstance</Value>
+    </Variable>
+    <Variable Type="float" Name="StackPanelInstance1.Width" SetsValue="true">
+      <Value xsi:type="xsd:float">100</Value>
+    </Variable>
+    <Variable Type="DimensionUnitType" Name="StackPanelInstance1.WidthUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="StackPanelInstance1.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">7</Value>
+    </Variable>
+  </State>
+  <Instance Name="ColoredRectangleInstance" BaseType="ColoredRectangle" />
+  <Instance Name="StackPanelInstance" BaseType="Controls/StackPanel" />
+  <Instance Name="StackPanelInstance1" BaseType="Controls/StackPanel" />
+  <Instance Name="PercentBarInstance" BaseType="Elements/PercentBar" />
+  <Instance Name="QuestionText" BaseType="Controls/Label" />
+  <Instance Name="AnswerChoiceA" BaseType="Controls/ButtonStandard" />
+  <Instance Name="AnswerChoiceB" BaseType="Controls/ButtonStandard" />
+  <Instance Name="AnswerChoiceC" BaseType="Controls/ButtonStandard" />
+  <Instance Name="AnswerChoiceD" BaseType="Controls/ButtonStandard" />
+  <Behaviors />
+</ScreenSave>

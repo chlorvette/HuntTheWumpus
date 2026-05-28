@@ -65,6 +65,10 @@ namespace GameControlUI
                     {
                         frame = 3;
                     }
+                } else if (this.Row == 1 && arrowReleased && frame == 9)
+                {
+                    this.Row = 0;
+                    arrowReleased = false;
                 }
                 frame++;
                 frame %= frameCount;
