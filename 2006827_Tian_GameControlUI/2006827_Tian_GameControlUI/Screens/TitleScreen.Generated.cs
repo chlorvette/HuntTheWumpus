@@ -1,4 +1,5 @@
 //Code for TitleScreen
+using GameControlUI.Components.Controls;
 using Gum.Converters;
 using Gum.DataTypes;
 using Gum.Managers;
@@ -37,6 +38,11 @@ if(element == null) throw new System.InvalidOperationException("Could not find a
         });
     }
     public ColoredRectangleRuntime ColoredRectangleInstance { get; protected set; }
+    public StackPanel StackPanelInstance { get; protected set; }
+    public ButtonStandard ButtonPlay { get; protected set; }
+    public StackPanel StackPanelInstance1 { get; protected set; }
+    public Label LabelInstance { get; protected set; }
+    public TextBox TextBoxName { get; protected set; }
 
     public TitleScreen(InteractiveGue visual) : base(visual)
     {
@@ -51,6 +57,11 @@ if(element == null) throw new System.InvalidOperationException("Could not find a
     {
         base.ReactToVisualChanged();
         ColoredRectangleInstance = this.Visual?.GetGraphicalUiElementByName("ColoredRectangleInstance") as global::MonoGameGum.GueDeriving.ColoredRectangleRuntime;
+        StackPanelInstance = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<StackPanel>(this.Visual,"StackPanelInstance");
+        ButtonPlay = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<ButtonStandard>(this.Visual,"ButtonPlay");
+        StackPanelInstance1 = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<StackPanel>(this.Visual,"StackPanelInstance1");
+        LabelInstance = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"LabelInstance");
+        TextBoxName = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<TextBox>(this.Visual,"TextBoxName");
         CustomInitialize();
     }
     //Not assigning variables because Object Instantiation Type is set to By Name rather than Fully In Code

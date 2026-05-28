@@ -24,6 +24,7 @@ namespace _2006827_Tian_GameControlUI
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private bool gameStarted = true;
+        private KeyboardState _prevKeyboardState;
 
         private AnimatedTexture playerTexture;
         private Tilemap tilemapLayerZero;
@@ -44,6 +45,8 @@ namespace _2006827_Tian_GameControlUI
         private const string playerAsset = "ArcherSheet";
         private int[] framesPerRow = { 5, 10, 8, 5, 6 };
         private Player player;
+        private string name = "";
+        private string highScoreFileName = @"..\..\..\Content\highscores.txt";
 
         // tilemap configuration
         private Vector2 tileScale = new Vector2(2f, 2f);
@@ -85,11 +88,11 @@ namespace _2006827_Tian_GameControlUI
         GumService GumUI => GumService.Default;
         GameScreen gameScreen;
         BuyArrowConfirmation buyArrowConfirmationScreen;
-        private bool buyArrowConfShown = false;
         ErrorDialog errorDialog;
         TriviaCorrect correctDialog;
         TriviaIncorrect incorrectDialog;
         BuySecretConfirmation buySecretConfirmationScreen;
+        EndScreen endScreen;
 
         // trivia configuration
         TriviaPopup triviaPopup;
@@ -165,7 +168,14 @@ namespace _2006827_Tian_GameControlUI
             var gumProject = GumUI.Initialize(this, "GumUI/GumProject.gumx");
 
             var titleScreen = new TitleScreen();
-            //titleScreen.AddToRoot();
+            titleScreen.ButtonPlay.Click += (_, _) =>
+            {
+                if (titleScreen.TextBoxName.Text != "")
+                {
+                    name = titleScreen.TextBoxName.Text;
+                    titleScreen.RemoveFromRoot();
+                }
+            };
 
             gameScreen = new GameScreen();
             gameScreen.BuyArrowButton.Click += (_, _) => buyArrowConfirmationScreen.AddToRoot();
@@ -239,6 +249,14 @@ namespace _2006827_Tian_GameControlUI
                     FinishTriviaRound();
             };
 
+            endScreen = new EndScreen();
+            endScreen.ButtonPlayAgain.Click += (_, _) =>
+            {
+                // restart game, reset game state
+            };
+            endScreen.Exit.Click += (_, _) => Exit();
+
+            titleScreen.AddToRoot();
             base.Initialize();
         }
 
@@ -332,17 +350,18 @@ namespace _2006827_Tian_GameControlUI
                     }
                     else
                     {
-                        EndGame(false);
+                        EndGame(false, name);
                     }
                     break;
                 case TriviaReason.Wumpus:
                     if (correctAnswersThisRound >= 3)
                     {
-                        // wumpus run away logic
+                        gameLocation.MoveWumpusToRandomConnectedRoom(cave.GetRoom(gameLocation.WumpusLocation).RoomTunnels);
+                        gameLocation.ResetWumpusAsleepTimer();
                     }
                     else
                     {
-                        EndGame(false);
+                        EndGame(false, name);
                     }
                     break;
                 case TriviaReason.Arrow:
@@ -371,7 +390,7 @@ namespace _2006827_Tian_GameControlUI
             if (!answerAwaitingResponse)
             {
                 if (!player.UseCoin()) {
-                    EndGame(false);
+                    EndGame(false, name);
                     return;
                 }
                 Random r = new Random();
@@ -458,10 +477,26 @@ namespace _2006827_Tian_GameControlUI
             }
         }
 
-        private void EndGame(bool win)
+        private void EndGame(bool win, string name)
         {
             ClearDialogs();
-            // show end screen with final score and option to restart
+            gameStarted = false;
+            int score = player.CalculateScore();
+            endScreen.LoadHighScores(highScoreFileName);
+            endScreen.UpdateHighScores(name, score);
+
+            if (win)
+            {
+                endScreen.EndingMessage.Text = "You won!";
+            } else
+            {
+                endScreen.EndingMessage.Text = "You lost.";
+            }
+
+            endScreen.Score.Text = $"Final Score: {score}";
+            endScreen.LoadHighScores(highScoreFileName);
+
+            endScreen.AddToRoot();
         }
 
         private (bool successful, bool shotWumpus) ShootArrow(string direction)
@@ -481,7 +516,7 @@ namespace _2006827_Tian_GameControlUI
                 player.arrows--;
                 if (player.arrows <= 0)
                 {
-                    EndGame(false);
+                    EndGame(false, name);
                 }
                 return (true, shotWumpus);
             } else
@@ -532,7 +567,6 @@ namespace _2006827_Tian_GameControlUI
 
         private void ClearDialogs()
         {
-            buyArrowConfShown = false;
             GumService.Default.Root.Children.Clear();
             gameScreen.AddToRoot();
         }
@@ -571,6 +605,7 @@ namespace _2006827_Tian_GameControlUI
             {
                 // keyboard input => player movement
                 KeyboardState keyboardState = Keyboard.GetState();
+                bool JustPressed(Keys k) => keyboardState.IsKeyDown(k) && !_prevKeyboardState.IsKeyDown(k);
                 if (keyboardState.IsKeyDown(Keys.Back))
                 {
                     Exit();
@@ -579,31 +614,35 @@ namespace _2006827_Tian_GameControlUI
                 isMoving = false;
                 drawingArrow = false;
                 Vector2 newCharacterPosition = characterPos;
-                if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+                if (!drawingArrow)
                 {
-                    newCharacterPosition.Y -= moveSpeed;
-                    isMoving = true;
-                }
+                    if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+                    {
+                        newCharacterPosition.Y -= moveSpeed;
+                        isMoving = true;
+                    }
 
-                if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
-                {
-                    newCharacterPosition.X -= moveSpeed;
-                    isMoving = true;
-                    movingLeft = true;
-                }
+                    if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
+                    {
+                        newCharacterPosition.X -= moveSpeed;
+                        isMoving = true;
+                        movingLeft = true;
+                    }
 
-                if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
-                {
-                    newCharacterPosition.Y += moveSpeed;
-                    isMoving = true;
-                }
+                    if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+                    {
+                        newCharacterPosition.Y += moveSpeed;
+                        isMoving = true;
+                    }
 
-                if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
-                {
-                    newCharacterPosition.X += moveSpeed;
-                    isMoving = true;
-                    movingLeft = false;
+                    if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+                    {
+                        newCharacterPosition.X += moveSpeed;
+                        isMoving = true;
+                        movingLeft = false;
+                    }
                 }
+                
 
                 if (keyboardState.IsKeyDown(Keys.Space))
                 {
@@ -612,33 +651,36 @@ namespace _2006827_Tian_GameControlUI
 
                 bool arrowShot = false;
                 bool arrowHit = false;
-                if (drawingArrow && (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up)))
+                if (drawingArrow)
                 {
-                    playerTexture.arrowReleased = true;
-                    (arrowShot, arrowHit) = ShootArrow("B");
-                }
-                if (drawingArrow && (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down)))
-                {
-                    playerTexture.arrowReleased = true;
-                    (arrowShot, arrowHit) = ShootArrow("F");
-                }
-                if (drawingArrow && (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left)))
-                {
-                    playerTexture.arrowReleased = true;
-                    (arrowShot, arrowHit) = ShootArrow("L");
-                }
-                if (drawingArrow && (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right)))
-                {
-                    playerTexture.arrowReleased = true;
-                    (arrowShot, arrowHit) = ShootArrow("R");
+                    if (JustPressed(Keys.W) || JustPressed(Keys.Up))
+                    {
+                        playerTexture.arrowReleased = true;
+                        (arrowShot, arrowHit) = ShootArrow("B");
+                    }
+                    else if (JustPressed(Keys.S) || JustPressed(Keys.Down))
+                    {
+                        playerTexture.arrowReleased = true;
+                        (arrowShot, arrowHit) = ShootArrow("F");
+                    }
+                    else if (JustPressed(Keys.A) || JustPressed(Keys.Left))
+                    {
+                        playerTexture.arrowReleased = true;
+                        (arrowShot, arrowHit) = ShootArrow("L");
+                    }
+                    else if (JustPressed(Keys.D) || JustPressed(Keys.Right))
+                    {
+                        playerTexture.arrowReleased = true;
+                        (arrowShot, arrowHit) = ShootArrow("R");
+                    }
                 }
 
                 if (arrowShot)
                 {
                     if (arrowHit)
                     {
-                        // wumpus killed set true
-                        EndGame(true);
+                        player.wumpusKilled = true;
+                        EndGame(true, name);
                     }
                 }
 
@@ -664,6 +706,10 @@ namespace _2006827_Tian_GameControlUI
 
                             player.TakeTurn();
                             gameLocation.OneTurnPasses();
+                            if (gameLocation.WumpusIsAwake)
+                            {
+                                gameLocation.MoveWumpusToRandomConnectedRoom(cave.GetTunnelRooms(gameLocation.WumpusLocation));
+                            }
                             System.Diagnostics.Debug.WriteLine("one turn passes");
 
                             showWumpus = false;
@@ -690,9 +736,6 @@ namespace _2006827_Tian_GameControlUI
                                     {
                                         showWumpus = true;
                                         StartTriviaRound(TriviaReason.Wumpus);
-                                        // um idk whatever u do when encounter the wumpus ??
-                                        // must answer 3 out of 5 trivia questions correctly to avoid being eaten
-                                        // if answered 3 out of 5 wumpus will run as many as 4 rooms away and if you win the fight you lose the game
                                     }
                                     if (hazardNames[hazardIndex] == "Bat")
                                     {
@@ -752,6 +795,7 @@ namespace _2006827_Tian_GameControlUI
                     playerSpriteEffect = SpriteEffects.None;
                 }
 
+                _prevKeyboardState = keyboardState;
                 float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 playerTexture.UpdateFrame(elapsed);
             }

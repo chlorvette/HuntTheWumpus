@@ -56,6 +56,7 @@
   <ScreenReference Name="BuyArrowConfirmation" />
   <ScreenReference Name="BuySecretConfirmation" />
   <ScreenReference Name="DemoScreenGum" />
+  <ScreenReference Name="EndScreen" />
   <ScreenReference Name="ErrorDialog" />
   <ScreenReference Name="GameScreen" />
   <ScreenReference Name="TitleScreen" />
@@ -94,7 +95,6 @@
   <ComponentReference Name="Controls/TreeView" />
   <ComponentReference Name="Controls/TreeViewItem" />
   <ComponentReference Name="Controls/TreeViewToggle" />
-  <ComponentReference Name="Controls/TriviaAnswerChoiceButton" />
   <ComponentReference Name="Controls/UserControl" />
   <ComponentReference Name="Controls/Window" />
   <ComponentReference Name="Elements/CautionLines" />

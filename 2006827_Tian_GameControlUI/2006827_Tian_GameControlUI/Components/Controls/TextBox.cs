@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace GameControlUI.Components.Controls
 {
-    partial class TriviaAnswerChoiceButton
+    partial class TextBox
     {
         partial void CustomInitialize()
         {

@@ -204,14 +204,14 @@ namespace GameLocations
             }
 
         }
-        public void MoveWumpusToRandomConnectedRoom(List<int> connectedCaves)
+        public void MoveWumpusToRandomConnectedRoom(List<Room> connectedCaves)
         {
 
             //make sure to call the reset wumpus asleep timer if it is a trivia win
             //the game control object should call this method 2 -4 times (only do this for a trivia win) after the player wins while calling the GetTunnels to find the available caves for each move to make the wumpus move a random number of times between 2 and 4 caves away from its current location after the player wins a trivia question against the wumpus
             //or if the wumpus is awake call this every turn it is awake for (just do like while(GameLocations.WumpusIsAwake) { MoveWumpusToRandomConnectedRoom(GetTunnels(GameLocations.WumpusLocation)); } in the game control object)
             int newLocation = random.Next(0, connectedCaves.Count);
-            WumpusLocation = connectedCaves[newLocation];
+            WumpusLocation = connectedCaves[newLocation].RoomNumber;
         }
         public void ClimbOutOfPit()
         {
