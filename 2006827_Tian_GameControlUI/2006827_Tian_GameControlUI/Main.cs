@@ -759,12 +759,10 @@ namespace _2006827_Tian_GameControlUI
                         }
                         else if (nextRoom == null)
                         {
-                            System.Diagnostics.Debug.WriteLine("no room in that direction");
                             lockedDoorIndex = doorCheck.index;
                         }
                         else
                         {
-                            System.Diagnostics.Debug.WriteLine("you try the door, but it doesn't budge.");
                             lockedDoorIndex = doorCheck.index;
                         }
                     }
