@@ -4,14 +4,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameGum;
 using Gum.Forms.Controls;
-using Gum.Wireframe;
 using System.Linq;
 using Cave = CaveGeneration.Cave;
 using Room = CaveGeneration.Room;
 using GameLocation = GameLocations.GameLocations;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Color = Microsoft.Xna.Framework.Color;
-using Gum.DataTypes.Variables;
 using GameControlUI.Screens;
 using System.IO;
 using System;
@@ -250,14 +248,28 @@ namespace _2006827_Tian_GameControlUI
             };
 
             endScreen = new EndScreen();
-            endScreen.ButtonPlayAgain.Click += (_, _) =>
-            {
-                // restart game, reset game state
-            };
+            endScreen.ButtonPlayAgain.Click += (_, _) => RestartGame();
             endScreen.Exit.Click += (_, _) => Exit();
 
             titleScreen.AddToRoot();
             base.Initialize();
+        }
+
+        private void RestartGame()
+        {
+            endScreen.RemoveFromRoot();
+
+            gameStarted = true;
+            player = new Player();
+            cave = new Cave(tunnelsPerRoom, caveHeight, caveWidth);
+
+            askedQuestions = new List<int>();
+            triviaReason = TriviaReason.None;
+            gameLocation = new GameLocation(cave.roomList.Count);
+            currentRoom = cave.GetRoom(gameLocation.PlayerLocation);
+            string warning = gameLocation.GetHazardWarning(cave.GetAdjacentRoomsForRoomNumber(gameLocation.PlayerLocation).roomNumbers).message;
+
+            var titleScreen = new TitleScreen();
         }
 
         private Viewport viewport;
@@ -356,6 +368,7 @@ namespace _2006827_Tian_GameControlUI
                 case TriviaReason.Wumpus:
                     if (correctAnswersThisRound >= 3)
                     {
+                        showWumpus = false;
                         gameLocation.MoveWumpusToRandomConnectedRoom(cave.GetRoom(gameLocation.WumpusLocation).RoomTunnels);
                         gameLocation.ResetWumpusAsleepTimer();
                     }
@@ -558,11 +571,6 @@ namespace _2006827_Tian_GameControlUI
                 (viewport.Width / 2) - (playerTexture.FrameWidth / 2),
                 (viewport.Height / 2) - (playerTexture.FrameHeight / 2)
             );
-        }
-
-        private void BuyArrow()
-        {
-            StartTriviaRound(TriviaReason.Arrow);
         }
 
         private void ClearDialogs()

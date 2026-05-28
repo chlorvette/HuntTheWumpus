@@ -1,10 +1,10 @@
+asd,114
 AB,100
+asd,100
+df,100
 jknj,100
+sd,100
+sdf,100
 CD,99
 EF,98
 GH,97
-IJ,96
-KL,95
-MN,94
-OP,93
-QR,92
