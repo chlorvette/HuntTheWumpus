@@ -606,10 +606,6 @@ namespace _2006827_Tian_GameControlUI
                 // keyboard input => player movement
                 KeyboardState keyboardState = Keyboard.GetState();
                 bool JustPressed(Keys k) => keyboardState.IsKeyDown(k) && !_prevKeyboardState.IsKeyDown(k);
-                if (keyboardState.IsKeyDown(Keys.Back))
-                {
-                    Exit();
-                }
 
                 isMoving = false;
                 drawingArrow = false;
