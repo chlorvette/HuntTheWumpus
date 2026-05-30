@@ -175,10 +175,16 @@ namespace GameControl
             var titleScreen = new TitleScreen();
             titleScreen.ButtonPlay.Click += (_, _) =>
             {
-                if (titleScreen.TextBoxName.Text != "")
+                if (titleScreen.TextBoxName.Text != "" && !titleScreen.TextBoxName.Text.Contains(","))
                 {
                     name = titleScreen.TextBoxName.Text;
                     titleScreen.RemoveFromRoot();
+                } else if (titleScreen.TextBoxName.Text == "")
+                {
+                    titleScreen.ErrorLabelInstance.Text = "you must enter a value!";
+                } else if (titleScreen.TextBoxName.Text.Contains(","))
+                {
+                    titleScreen.ErrorLabelInstance.Text = "name cannot contain commas!";
                 }
             };
 

@@ -42,6 +42,7 @@ if(element == null) throw new System.InvalidOperationException("Could not find a
     public ButtonStandard ButtonPlay { get; protected set; }
     public StackPanel StackPanelInstance1 { get; protected set; }
     public Label LabelInstance { get; protected set; }
+    public ErrorLabel ErrorLabelInstance { get; protected set; }
     public TextBox TextBoxName { get; protected set; }
 
     public TitleScreen(InteractiveGue visual) : base(visual)
@@ -61,6 +62,7 @@ if(element == null) throw new System.InvalidOperationException("Could not find a
         ButtonPlay = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<ButtonStandard>(this.Visual,"ButtonPlay");
         StackPanelInstance1 = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<StackPanel>(this.Visual,"StackPanelInstance1");
         LabelInstance = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"LabelInstance");
+        ErrorLabelInstance = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<ErrorLabel>(this.Visual,"ErrorLabelInstance");
         TextBoxName = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<TextBox>(this.Visual,"TextBoxName");
         CustomInitialize();
     }

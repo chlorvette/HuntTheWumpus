@@ -57,6 +57,33 @@
     <Variable Type="DimensionUnitType" Name="ColoredRectangleInstance.WidthUnits" SetsValue="true">
       <Value xsi:type="xsd:int">1</Value>
     </Variable>
+    <Variable Type="HorizontalAlignment" Name="ErrorLabelInstance.HorizontalAlignment" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="string" Name="ErrorLabelInstance.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">StackPanelInstance1</Value>
+    </Variable>
+    <Variable Type="string" Name="ErrorLabelInstance.Text" SetsValue="true">
+      <Value xsi:type="xsd:string"></Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="ErrorLabelInstance.VerticalAlignment" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="ErrorLabelInstance.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="ErrorLabelInstance.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="float" Name="ErrorLabelInstance.Y" SetsValue="true">
+      <Value xsi:type="xsd:float">8</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="ErrorLabelInstance.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">0</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="ErrorLabelInstance.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">7</Value>
+    </Variable>
     <Variable Type="int" Name="LabelInstance.FontSize" SetsValue="true">
       <Value xsi:type="xsd:int">42</Value>
     </Variable>
@@ -147,6 +174,7 @@
   <Instance Name="ButtonPlay" BaseType="Controls/ButtonStandard" />
   <Instance Name="StackPanelInstance1" BaseType="Controls/StackPanel" />
   <Instance Name="LabelInstance" BaseType="Controls/Label" />
+  <Instance Name="ErrorLabelInstance" BaseType="Controls/ErrorLabel" />
   <Instance Name="TextBoxName" BaseType="Controls/TextBox" />
   <Behaviors />
 </ScreenSave>

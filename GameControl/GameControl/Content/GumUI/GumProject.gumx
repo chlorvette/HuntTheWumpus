@@ -73,6 +73,7 @@
   <ComponentReference Name="Controls/CheckBox" />
   <ComponentReference Name="Controls/ComboBox" />
   <ComponentReference Name="Controls/DialogBox" />
+  <ComponentReference Name="Controls/ErrorLabel" />
   <ComponentReference Name="Controls/ItemsControl" />
   <ComponentReference Name="Controls/Keyboard" />
   <ComponentReference Name="Controls/KeyboardKey" />
