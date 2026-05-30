@@ -2,6 +2,9 @@
   "TreeViewState": {
     "ExpandedNodes": [
       "Screens",
+      "Screens/BuyArrowConfirmation",
+      "Screens/BuyArrowConfirmation/ColoredRectangleInstance",
+      "Screens/BuyArrowConfirmation/ColoredRectangleInstance/StackPanelInstance",
       "Components",
       "Components/Controls"
     ]
