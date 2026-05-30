@@ -287,6 +287,13 @@ namespace GameControl
             batWarningActive = warnings[1];
             wumpusWarningActive = warnings[2];
 
+            isMoving = false;
+            movingLeft = false;
+            drawingArrow = false;
+
+            showWumpus = false;
+            showPit = false;
+
             var titleScreen = new TitleScreen();
         }
 
