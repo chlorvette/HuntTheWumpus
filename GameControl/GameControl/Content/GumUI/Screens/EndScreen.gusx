@@ -162,6 +162,36 @@
     <Variable Type="PositionUnitType" Name="PanelInstance.YUnits" SetsValue="true">
       <Value xsi:type="xsd:int">7</Value>
     </Variable>
+    <Variable Type="int" Name="ReasonLabel.FontSize" SetsValue="true">
+      <Value xsi:type="xsd:int">16</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="ReasonLabel.HorizontalAlignment" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="float" Name="ReasonLabel.LineHeightMultiplier" SetsValue="true">
+      <Value xsi:type="xsd:float">2</Value>
+    </Variable>
+    <Variable Type="string" Name="ReasonLabel.Parent" SetsValue="true">
+      <Value xsi:type="xsd:string">StackPanelInstance</Value>
+    </Variable>
+    <Variable Type="string" Name="ReasonLabel.Text" SetsValue="true">
+      <Value xsi:type="xsd:string">Reason</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="ReasonLabel.VerticalAlignment" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="HorizontalAlignment" Name="ReasonLabel.XOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="ReasonLabel.XUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">6</Value>
+    </Variable>
+    <Variable Type="VerticalAlignment" Name="ReasonLabel.YOrigin" SetsValue="true">
+      <Value xsi:type="xsd:int">1</Value>
+    </Variable>
+    <Variable Type="PositionUnitType" Name="ReasonLabel.YUnits" SetsValue="true">
+      <Value xsi:type="xsd:int">7</Value>
+    </Variable>
     <Variable Type="int" Name="Score.FontSize" SetsValue="true">
       <Value xsi:type="xsd:int">16</Value>
     </Variable>
@@ -472,6 +502,7 @@
   <Instance Name="ColoredRectangleInstance" BaseType="ColoredRectangle" />
   <Instance Name="StackPanelInstance" BaseType="Controls/StackPanel" />
   <Instance Name="EndingMessage" BaseType="Controls/Label" />
+  <Instance Name="ReasonLabel" BaseType="Controls/Label" />
   <Instance Name="Score" BaseType="Controls/Label" />
   <Instance Name="StackPanelInstance1" BaseType="Controls/StackPanel" />
   <Instance Name="StackPanelInstance2" BaseType="Controls/StackPanel" />

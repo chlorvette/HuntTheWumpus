@@ -21,13 +21,15 @@ namespace GameControlUI.Screens
 
         private string _highScoreFileName;
 
-        public void UpdateHighScores(string name, int score)
+        public void UpdateHighScores(string name, int score, string reason)
         {
             if (string.IsNullOrWhiteSpace(_highScoreFileName)) throw new InvalidOperationException("LoadHighScores(highScoreFileName) must be called before UpdateHighScores.");
             if (highScoreList == null) highScoreList = new List<(string, int)>();
             highScoreList.Add((name.Trim(), score));
             highScoreList = highScoreList.OrderByDescending(x => x.Item2).ThenBy(x => x.Item1).Take(10).ToList();
             File.WriteAllLines(_highScoreFileName, highScoreList.Select(x => $"{x.Item1},{x.Item2}"));
+
+            this.ReasonLabel.Text = string.IsNullOrEmpty(reason) ? "":("Reason: " + reason);
 
             UpdateHighScoreLabels(highScoreList);
         }
@@ -64,10 +66,7 @@ namespace GameControlUI.Screens
         }
         private void UpdateHighScoreLabels(List<(string, int)> scores)
         {
-            var padded = scores
-                .Concat(Enumerable.Repeat(("", 0), 10))
-                .Take(10)
-                .ToList();
+            var padded = scores.Concat(Enumerable.Repeat(("", 0), 10)).Take(10).ToList();
 
             this.Top1.Text = FormatScore(padded[0]);
             this.Top2.Text = FormatScore(padded[1]);

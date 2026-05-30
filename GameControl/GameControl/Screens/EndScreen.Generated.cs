@@ -40,6 +40,7 @@ if(element == null) throw new System.InvalidOperationException("Could not find a
     public ColoredRectangleRuntime ColoredRectangleInstance { get; protected set; }
     public StackPanel StackPanelInstance { get; protected set; }
     public Label EndingMessage { get; protected set; }
+    public Label ReasonLabel { get; protected set; }
     public Label Score { get; protected set; }
     public StackPanel StackPanelInstance1 { get; protected set; }
     public StackPanel StackPanelInstance2 { get; protected set; }
@@ -74,6 +75,7 @@ if(element == null) throw new System.InvalidOperationException("Could not find a
         ColoredRectangleInstance = this.Visual?.GetGraphicalUiElementByName("ColoredRectangleInstance") as global::MonoGameGum.GueDeriving.ColoredRectangleRuntime;
         StackPanelInstance = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<StackPanel>(this.Visual,"StackPanelInstance");
         EndingMessage = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"EndingMessage");
+        ReasonLabel = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"ReasonLabel");
         Score = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<Label>(this.Visual,"Score");
         StackPanelInstance1 = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<StackPanel>(this.Visual,"StackPanelInstance1");
         StackPanelInstance2 = global::Gum.Forms.GraphicalUiElementFormsExtensions.TryGetFrameworkElementByName<StackPanel>(this.Visual,"StackPanelInstance2");

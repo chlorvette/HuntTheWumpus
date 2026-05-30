@@ -15,7 +15,7 @@ using System.IO;
 using System;
 using System.Collections.Generic;
 
-namespace _2006827_Tian_GameControlUI
+namespace GameControl
 {
     public class Main : Game
     {
@@ -136,6 +136,8 @@ namespace _2006827_Tian_GameControlUI
 
         public Main()
         {
+            Window.Title = "Hunt the Wumpus";
+
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -156,7 +158,12 @@ namespace _2006827_Tian_GameControlUI
             cave = new Cave(tunnelsPerRoom, caveHeight, caveWidth);
             gameLocation = new GameLocation(cave.roomList.Count);
             currentRoom = cave.GetRoom(gameLocation.PlayerLocation);
-            string warning = gameLocation.GetHazardWarning(cave.GetAdjacentRoomsForRoomNumber(gameLocation.PlayerLocation).roomNumbers).message;
+
+            (string warningMessages, bool[] warnings) = gameLocation.GetHazardWarning(cave.GetAdjacentRoomsForRoomNumber(gameLocation.PlayerLocation).roomNumbers);
+            if (warningMessages != "") System.Diagnostics.Debug.WriteLine(warningMessages);
+            pitWarningActive = warnings[0];
+            batWarningActive = warnings[1];
+            wumpusWarningActive = warnings[2];
         }
 
         protected override void Initialize()
@@ -267,7 +274,12 @@ namespace _2006827_Tian_GameControlUI
             triviaReason = TriviaReason.None;
             gameLocation = new GameLocation(cave.roomList.Count);
             currentRoom = cave.GetRoom(gameLocation.PlayerLocation);
-            string warning = gameLocation.GetHazardWarning(cave.GetAdjacentRoomsForRoomNumber(gameLocation.PlayerLocation).roomNumbers).message;
+
+            (string warningMessages, bool[] warnings) = gameLocation.GetHazardWarning(cave.GetAdjacentRoomsForRoomNumber(gameLocation.PlayerLocation).roomNumbers);
+            if (warningMessages != "") System.Diagnostics.Debug.WriteLine(warningMessages);
+            pitWarningActive = warnings[0];
+            batWarningActive = warnings[1];
+            wumpusWarningActive = warnings[2];
 
             var titleScreen = new TitleScreen();
         }
@@ -362,7 +374,8 @@ namespace _2006827_Tian_GameControlUI
                     }
                     else
                     {
-                        EndGame(false, name);
+                        EndGame(false, name, "failed the trivia required to climb out of the pit.");
+                        System.Diagnostics.Debug.WriteLine("not enough correct answers to climb out of pit");
                     }
                     break;
                 case TriviaReason.Wumpus:
@@ -374,7 +387,8 @@ namespace _2006827_Tian_GameControlUI
                     }
                     else
                     {
-                        EndGame(false, name);
+                        EndGame(false, name, "not enough correct trivia answers to escape the wumpus.");
+                        System.Diagnostics.Debug.WriteLine("not enough correct answers to escape wumpus");
                     }
                     break;
                 case TriviaReason.Arrow:
@@ -403,7 +417,8 @@ namespace _2006827_Tian_GameControlUI
             if (!answerAwaitingResponse)
             {
                 if (!player.UseCoin()) {
-                    EndGame(false, name);
+                    EndGame(false, name, "not enough coins to finish the trivia.");
+                    System.Diagnostics.Debug.WriteLine("player ran out of coins to continue trivia");
                     return;
                 }
                 Random r = new Random();
@@ -490,13 +505,13 @@ namespace _2006827_Tian_GameControlUI
             }
         }
 
-        private void EndGame(bool win, string name)
+        private void EndGame(bool win, string name, string reason)
         {
             ClearDialogs();
             gameStarted = false;
             int score = player.CalculateScore();
             endScreen.LoadHighScores(highScoreFileName);
-            endScreen.UpdateHighScores(name, score);
+            endScreen.UpdateHighScores(name, score, reason);
 
             if (win)
             {
@@ -529,7 +544,8 @@ namespace _2006827_Tian_GameControlUI
                 player.arrows--;
                 if (player.arrows <= 0)
                 {
-                    EndGame(false, name);
+                    EndGame(false, name, "no arrows left, the wumpus seized the opportunity and ate you.");
+                    System.Diagnostics.Debug.WriteLine("player ran out of arrows");
                 }
                 return (true, shotWumpus);
             } else
@@ -684,7 +700,8 @@ namespace _2006827_Tian_GameControlUI
                     if (arrowHit)
                     {
                         player.wumpusKilled = true;
-                        EndGame(true, name);
+                        EndGame(true, name, "");
+                        System.Diagnostics.Debug.WriteLine("shot wumpus and won the game");
                     }
                 }
 
@@ -745,6 +762,7 @@ namespace _2006827_Tian_GameControlUI
                                     {
                                         gameLocation.MovePlayerToRandomLocation();
                                         errorDialog.MessageLabel.Text = $"A bat moved you to room {gameLocation.PlayerLocation}";
+                                        errorDialog.AddToRoot();
                                     }
                                 }
                             }
